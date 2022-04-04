@@ -16,4 +16,5 @@ MonoBehaviour:
   moveCost: 2
   notPassableToAll: 0
   blockCavalry: 1
-  tileImage: {fileID: 21300000, guid: 01696c147d473f24ababd7462ddd8113, type: 3}
+  tileImage: {fileID: 0}
+  tile: {fileID: 11400000, guid: b770ff2f8818c5140ba488af4ad7abac, type: 2}

@@ -6,6 +6,8 @@ using UnityEngine.Tilemaps;
 public class MapTileManager : MonoBehaviour
 {
     public Tilemap tilemap;
+    public Tilemap highlightMap;
+    public Tile highlight;
     public Tile grass;
     public TileType grassTile;
     public Tile rock;
