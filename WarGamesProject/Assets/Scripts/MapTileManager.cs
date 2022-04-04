@@ -40,4 +40,11 @@ public class MapTileManager : MonoBehaviour
         }
     }
 
+    public static void FindMoveableTiles(UnitType unit)
+    {
+        //Check each direction if the unit can walk onto that tile. Also check the movement cost of the tile.
+        //Place a highligh object on those tiles while that unit is selected
+        //Then remove the selectable tiles that are already occupied by other units.
+    }
+
 }

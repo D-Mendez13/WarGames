@@ -26,9 +26,10 @@ public class Unit : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(mouseOver && status == UnitStatus.Active) //Also ADD a check if it's the players turn
+            if(mouseOver && status == UnitStatus.Active && GameManager.currentTurn == TeamTurn.Blue_Turn)
             {
                 //Check valid tiles
+                MapTileManager.FindMoveableTiles(unitType);
             }
         }
     }
