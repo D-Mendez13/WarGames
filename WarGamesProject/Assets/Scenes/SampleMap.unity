@@ -365,7 +365,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.31410694, g: 0.4745098, b: 0.19215688, a: 0}
+  m_BackGroundColor: {r: 0.15699537, g: 0.3864389, b: 0.5283019, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1177,12 +1177,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemap: {fileID: 1649519989}
   highlightMap: {fileID: 598315767}
-  highlight: {fileID: 0}
-  grass: {fileID: 11400000, guid: d4faf8f271b5fcd4b9d49ce7f024bc20, type: 2}
+  highlight: {fileID: 11400000, guid: 46f4fb0bd995c1d4db797828e8ce874c, type: 2}
   grassTile: {fileID: 11400000, guid: d8c4b926212d919419db8f2c389fc219, type: 2}
-  rock: {fileID: 11400000, guid: e24db5daed1424441baf2c80a342a793, type: 2}
   rockTile: {fileID: 11400000, guid: 5941cd42e5ef87346b15954b57ae9038, type: 2}
-  forest: {fileID: 11400000, guid: b770ff2f8818c5140ba488af4ad7abac, type: 2}
   forestTile: {fileID: 11400000, guid: 1caf854193087c648ae2cbc260f687d2, type: 2}
 --- !u!1001 &1436457683
 PrefabInstance:

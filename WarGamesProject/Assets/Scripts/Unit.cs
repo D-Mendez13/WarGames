@@ -7,19 +7,16 @@ public class Unit : MonoBehaviour
     public UnitType unitType;
     public Team teamColor;
     public UnitStatus status;
-    public GameObject highlight;
     private bool mouseOver = false;
 
     private void OnMouseEnter()
     {
         mouseOver = true;
-        highlight.SetActive(true);
     }
 
     private void OnMouseExit()
     {
         mouseOver = false;
-        highlight.SetActive(false);
     }
 
     private void Update()

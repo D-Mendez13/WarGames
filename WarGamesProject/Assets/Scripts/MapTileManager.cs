@@ -8,11 +8,8 @@ public class MapTileManager : MonoBehaviour
     public Tilemap tilemap;
     public Tilemap highlightMap;
     public Tile highlight;
-    public Tile grass;
     public TileType grassTile;
-    public Tile rock;
     public TileType rockTile;
-    public Tile forest;
     public TileType forestTile;
     private Vector3Int location;
 
@@ -25,17 +22,23 @@ public class MapTileManager : MonoBehaviour
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         location = tilemap.WorldToCell(mousePosition);
 
+        highlightMap.ClearAllTiles();
+        if (highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
+        {
+            highlightMap.SetTile(location, highlight);
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            if(tilemap.GetTile<Tile>(location) == grass)
+            if(tilemap.GetTile<Tile>(location) == grassTile.tile)
             {
                 Debug.Log($"Grass Tile at Location: {location}");
             }
-            else if(tilemap.GetTile<Tile>(location) == rock)
+            else if(tilemap.GetTile<Tile>(location) == rockTile.tile)
             {
                 Debug.Log($"Rock Tile at Location: {location}");
             }
-            else if(tilemap.GetTile<Tile>(location) == forest)
+            else if(tilemap.GetTile<Tile>(location) == forestTile.tile)
             {
                 Debug.Log($"Forest Tile at Location: {location}");
             }

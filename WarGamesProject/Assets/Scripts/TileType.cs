@@ -10,6 +10,5 @@ public class TileType : ScriptableObject
     public int moveCost;
     public bool notPassableToAll;
     public bool blockCavalry;
-    public Sprite tileImage;
     public Tile tile;
 }
