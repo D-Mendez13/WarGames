@@ -30,6 +30,11 @@ public class Unit : MonoBehaviour
             }
         }
     }
+
+    public void MoveUnit()
+    {
+
+    }
 }
 
 public enum Team
