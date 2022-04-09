@@ -100,6 +100,8 @@ MonoBehaviour:
   unitType: {fileID: 11400000, guid: 6083834327abda14f9292a8374f10ab6, type: 2}
   teamColor: 0
   status: 0
+  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  inactiveColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
 --- !u!61 &4638420437417221007
 BoxCollider2D:
   m_ObjectHideFlags: 0

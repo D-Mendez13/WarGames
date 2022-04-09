@@ -7,6 +7,9 @@ public class Unit : MonoBehaviour
     public UnitType unitType;
     public Team teamColor;
     public UnitStatus status;
+    private Animator animator;
+    private MapTileManager tileManager;
+    private Transform unitPosition;
     private bool mouseOver = false;
 
     private void OnMouseEnter()
@@ -19,6 +22,17 @@ public class Unit : MonoBehaviour
         mouseOver = false;
     }
 
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        tileManager = FindObjectOfType<MapTileManager>();
+        unitPosition = GetComponent<Transform>();
+        if(tileManager == null)
+        {
+            Debug.LogError("Could not find a Map Tile Manager GameObject in the Scene");
+        }
+    }
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -26,14 +40,42 @@ public class Unit : MonoBehaviour
             if(mouseOver && status == UnitStatus.Active && GameManager.currentTurn == TeamTurn.Blue_Turn)
             {
                 //Check valid tiles
-                MapTileManager.FindMoveableTiles(unitType);
+                tileManager.FindMoveableTiles(unitType, unitPosition.position);
+                GameManager.SetSelectedUnit(gameObject);
             }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            
         }
     }
 
     public void MoveUnit()
     {
 
+    }
+
+    void UnitSetActive()
+    {
+        status = UnitStatus.Active;
+        animator.enabled = true;
+        GetComponent<SpriteRenderer>().color = GameManager.activeColor;
+    }
+
+    void UnitSetInactive()
+    {
+        status = UnitStatus.Inactive;
+        animator.enabled=false;
+        if (teamColor == Team.Blue)
+        {
+            GetComponent<SpriteRenderer>().sprite = unitType.blueInactiveImage;
+        }
+        else if (teamColor == Team.Red)
+        {
+            GetComponent<SpriteRenderer>().sprite = unitType.redInactiveImage;
+        }
+        GetComponent<SpriteRenderer>().color = GameManager.inactiveColor;
     }
 }
 

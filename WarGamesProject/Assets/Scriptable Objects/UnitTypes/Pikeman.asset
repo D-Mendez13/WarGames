@@ -16,3 +16,5 @@ MonoBehaviour:
   moveAmount: 3
   maxHealth: 22
   attack: 8
+  blueInactiveImage: {fileID: 2937557478537688234, guid: e9ef286541e29574e996c32a5cb09c45, type: 3}
+  redInactiveImage: {fileID: -1540831773167453289, guid: 59bce97d5f566804da40dfe1dcd3d3fa, type: 3}

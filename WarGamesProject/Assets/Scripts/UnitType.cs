@@ -10,4 +10,6 @@ public class UnitType : ScriptableObject
 
     public int maxHealth;
     public int attack;
+    public Sprite blueInactiveImage;
+    public Sprite redInactiveImage;
 }
