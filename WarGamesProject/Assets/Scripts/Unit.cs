@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour
     private MapTileManager tileManager;
     private Transform unitPosition;
     private bool mouseOver = false;
+    private GameManager gameManager;
 
     private void OnMouseEnter()
     {
@@ -24,6 +25,11 @@ public class Unit : MonoBehaviour
 
     private void Start()
     {
+        gameManager = FindObjectOfType<GameManager>();
+        if(gameManager == null)
+        {
+            Debug.LogError("Could not find the Game Manager for the scene");
+        }
         animator = GetComponent<Animator>();
         tileManager = FindObjectOfType<MapTileManager>();
         unitPosition = GetComponent<Transform>();
@@ -37,11 +43,11 @@ public class Unit : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(mouseOver && status == UnitStatus.Active && GameManager.currentTurn == TeamTurn.Blue_Turn)
+            if(mouseOver && status == UnitStatus.Active && gameManager.currentTurn == TeamTurn.Blue_Turn)
             {
                 //Check valid tiles
                 tileManager.FindMoveableTiles(unitType, unitPosition.position);
-                GameManager.SetSelectedUnit(gameObject);
+                gameManager.SetSelectedUnit(gameObject);
             }
         }
 
@@ -56,14 +62,14 @@ public class Unit : MonoBehaviour
 
     }
 
-    void UnitSetActive()
+    public void UnitSetActive()
     {
         status = UnitStatus.Active;
         animator.enabled = true;
-        GetComponent<SpriteRenderer>().color = GameManager.activeColor;
+        GetComponent<SpriteRenderer>().color = gameManager.activeColor;
     }
 
-    void UnitSetInactive()
+    public void UnitSetInactive()
     {
         status = UnitStatus.Inactive;
         animator.enabled=false;
@@ -75,7 +81,7 @@ public class Unit : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().sprite = unitType.redInactiveImage;
         }
-        GetComponent<SpriteRenderer>().color = GameManager.inactiveColor;
+        GetComponent<SpriteRenderer>().color = gameManager.inactiveColor;
     }
 }
 

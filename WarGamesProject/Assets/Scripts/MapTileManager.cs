@@ -18,10 +18,16 @@ public class MapTileManager : MonoBehaviour
 
     private Vector3Int location; //The location of the tile that was clicked by the player.
     private float unitOffset = 0.5f; //When moving a player on a tile, add this to their x and y positions so they are centered on the tile.
+    
+    private GameManager gameManager;
 
     private void Start()
     {
-        
+        gameManager = FindObjectOfType<GameManager>();
+        if(gameManager == null)
+        {
+            Debug.LogError("Could not find a Game Manager Object in the scene");
+        }
     }
     private void Update()
     {
@@ -40,7 +46,8 @@ public class MapTileManager : MonoBehaviour
             //Checks if a move tile is clicked then moves the selected unit to that position
             if(moveTilemap.GetTile<Tile>(location) != null)
             {
-                GameManager.GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                gameManager.GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                gameManager.EnableActionPanel();
                 moveTilemap.ClearAllTiles();
             }
         }
@@ -57,6 +64,7 @@ public class MapTileManager : MonoBehaviour
      */
     public void FindMoveableTiles(UnitType unit, Vector3 unitPosition)
     {
+        moveTilemap.ClearAllTiles();
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
         HighlightMovableTiles(startPos,unit,unit.moveAmount);
 
