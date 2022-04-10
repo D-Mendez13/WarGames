@@ -8,7 +8,6 @@ public class TileType : ScriptableObject
 {
     public string tileName;
     public int moveCost;
-    public bool notPassableToAll;
     public bool blockCavalry;
     public Tile tile;
 }

@@ -13,8 +13,6 @@ MonoBehaviour:
   m_Name: RockTile
   m_EditorClassIdentifier: 
   tileName: RockTile
-  moveCost: 0
-  notPassableToAll: 1
+  moveCost: 99
   blockCavalry: 0
-  tileImage: {fileID: 0}
   tile: {fileID: 11400000, guid: e24db5daed1424441baf2c80a342a793, type: 2}

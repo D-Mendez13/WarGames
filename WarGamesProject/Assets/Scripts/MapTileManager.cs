@@ -5,15 +5,19 @@ using UnityEngine.Tilemaps;
 
 public class MapTileManager : MonoBehaviour
 {
-    public Tilemap tilemap;
-    public Tilemap highlightMap;
-    public Tilemap moveTilemap;
-    public Tile highlight;
-    public Tile moveTile;
+    public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
+    public Tilemap highlightMap; //This tilemap is only used for highlighting the tile the mouse is over.
+    public Tilemap moveTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
+    public Tile highlight; //The highlight tile that will be placed on the highlightMap layer.
+    public Tile moveTile; //The tile that will be placed on the moveTilemap layer.
+
+    //These are the tiles with different move costs and other information stored in them.
     public TileType grassTile;
     public TileType rockTile;
     public TileType forestTile;
-    private Vector3Int location;
+
+    private Vector3Int location; //The location of the tile that was clicked by the player.
+    private float unitOffset = 0.5f; //When moving a player on a tile, add this to their x and y positions so they are centered on the tile.
 
     private void Start()
     {
@@ -24,6 +28,7 @@ public class MapTileManager : MonoBehaviour
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         location = tilemap.WorldToCell(mousePosition);
 
+        //This highlights the tile the mouse is over.
         highlightMap.ClearAllTiles();
         if (highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
         {
@@ -32,106 +37,93 @@ public class MapTileManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if(tilemap.GetTile<Tile>(location) == grassTile.tile)
+            //Checks if a move tile is clicked then moves the selected unit to that position
+            if(moveTilemap.GetTile<Tile>(location) != null)
             {
-                Debug.Log($"Grass Tile at Location: {location}");
+                GameManager.GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                moveTilemap.ClearAllTiles();
             }
-            else if(tilemap.GetTile<Tile>(location) == rockTile.tile)
-            {
-                Debug.Log($"Rock Tile at Location: {location}");
-            }
-            else if(tilemap.GetTile<Tile>(location) == forestTile.tile)
-            {
-                Debug.Log($"Forest Tile at Location: {location}");
-            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            moveTilemap.ClearAllTiles();
         }
     }
 
+    /*
+     * Triggered from the Unit.cs class
+     * Will check which tiles the unit is able to move on.
+     */
     public void FindMoveableTiles(UnitType unit, Vector3 unitPosition)
     {
-        //Check each direction if the unit can walk onto that tile. Also check the movement cost of the tile.
-        //Place a highligh object on those tiles while that unit is selected
-        //Then remove the selectable tiles that are already occupied by other units.
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
-        Vector3Int positiveY = startPos;
-        Vector3Int negativeY = startPos;
-        Vector3Int positiveX = startPos;
-        Vector3Int negativeX = startPos;
-        Debug.Log("Move tile triggered");
-        for(int i = unit.moveAmount; i > 0; i--)
-        {
-            //+y
-            HighlightMovableTiles(positiveY, unit, i);
-            positiveY = new Vector3Int(positiveY.x, positiveY.y + 1, positiveY.z);
-            //+x
-            HighlightMovableTiles(positiveX, unit, i);
-            positiveX = new Vector3Int(positiveX.x + 1, positiveX.y, positiveX.z);
-            //-y
-            HighlightMovableTiles(negativeY, unit, i);
-            negativeY = new Vector3Int(negativeY.x, negativeY.y - 1, negativeY.z);
-            //-x
-            HighlightMovableTiles(negativeX, unit, i);
-            negativeX = new Vector3Int(negativeX.x - 1, negativeX.y, negativeX.z);
-        }
+        HighlightMovableTiles(startPos,unit,unit.moveAmount);
+
+        moveTilemap.SetTile(startPos, null); //Removes highlight on selected unit.
     }
-    void HighlightMovableTiles(Vector3Int currentTilePosition, UnitType unit , int remaningMoves)
+
+    /*
+     * This will check the four adjacent tiles to see if the unit can move on it.
+     * If it CAN, it will set a moveTile on that position for the player to later click on.
+     */
+    void HighlightMovableTiles(Vector3Int currentTilePosition, UnitType unit, int remaningMoves)
     {
-        Debug.Log("Highlighting!");
         int[] posX = {-1,0,0,1};
         int[] posY = {0,1,-1,0};
-        for(int x = 0; x < 4; x++)
+        for(int x = 0; x < posX.Length; x++)
         {
-            for(int y = 0; y < 4; y++)
+            Vector3Int nextTilePosition = new Vector3Int(currentTilePosition.x + posX[x], currentTilePosition.y + posY[x], currentTilePosition.z);
+            if (tilemap.GetTile<Tile>(nextTilePosition) != null)
             {
-                Vector3Int nextTileLocation = new Vector3Int(currentTilePosition.x + posX[x], currentTilePosition.y + posY[y], currentTilePosition.z);
-                TileType nextTileType;
-                if(tilemap.GetTile<Tile>(nextTileLocation) != null)
+                if (CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
                 {
-                    if(tilemap.GetTile<Tile>(nextTileLocation) == grassTile.tile)
-                    {
-                        nextTileType = grassTile;
-                    }
-                    else if(tilemap.GetTile<Tile>(nextTileLocation) == forestTile.tile)
-                    {
-                        nextTileType = forestTile;
-                    }
-                    else
-                    {
-                        nextTileType = rockTile;
-                    }
-
-                    if (MoveCostCheck(remaningMoves, nextTileType, unit))
-                    {
-                        moveTilemap.SetTile(nextTileLocation, moveTile);
-                    }
+                    moveTilemap.SetTile(nextTilePosition, moveTile);
+                    HighlightMovableTiles(nextTilePosition,unit,remaningMoves-GetTileType(nextTilePosition).moveCost);
                 }
             }
         }
     }
-    bool MoveCostCheck(int playerMove, TileType tile, UnitType unit)
+
+    /*
+     * Returns true if the player has enough move points to move on that tile.
+     * It will first check if the blockCavalry flag is active in that TileType
+     */
+    bool CanMove(int remaningMoves, TileType tile, UnitType unit)
     {
-        Debug.Log("Checking move cost...");
-        if (!tile.notPassableToAll)
+        if (tile.blockCavalry && unit.unitName == "Cavalry")
         {
-            if (tile.blockCavalry && unit.unitName == "Cavalry")
-            {
-                return false;
-            }
-            else
-            {
-                if(playerMove >= tile.moveCost)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            return false;
         }
         else
         {
-            return false;
+            if (remaningMoves >= tile.moveCost)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
+    /*
+     * Returns what kind of TileType is at the passed in coordinates.
+     */
+    TileType GetTileType(Vector3Int position)
+    {
+        if (tilemap.GetTile<Tile>(position) == forestTile.tile)
+        {
+            return forestTile;
+        }
+        else if (tilemap.GetTile<Tile>(position) == rockTile.tile)
+        {
+            return rockTile;
+        }
+        else
+        {
+            return grassTile;
         }
     }
 }
