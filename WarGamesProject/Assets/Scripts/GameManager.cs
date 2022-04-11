@@ -28,18 +28,24 @@ public class GameManager : MonoBehaviour
     public Color activeColor = new Color(1, 1, 1, 1);
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
 
+    [Header("UI Objects")]
     public GameObject actionPanel;
+    public GameObject endTurnButton;
     private GameObject selectedUnit;
     private Vector3 selectedUnitStartingPos;
 
+    [Header("Tilemap layers")]
     public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
     public Tilemap highlightMap; //This tilemap is only used for highlighting the tile the mouse is over.
     public Tilemap moveTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
+    [Header("Tiles")]
     public Tile highlight; //The highlight tile that will be placed on the highlightMap layer.
     public Tile moveTile; //The tile that will be placed on the moveTilemap layer.
+    public Tile occupiedMoveTile;
     public Tile selectedUnitTile;
 
     //These are the tiles with different move costs and other information stored in them.
+    [Header("Tile Types")]
     public TileType grassTile;
     public TileType rockTile;
     public TileType forestTile;
@@ -68,7 +74,7 @@ public class GameManager : MonoBehaviour
         {
             if(gameState == GameState.MovingUnit)
             {
-                if (moveTilemap.GetTile<Tile>(location).Equals(moveTile))
+                if (moveTilemap.GetTile<Tile>(location) == moveTile && GetSelectedUnit() != null)
                 {
                     GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
                     EnableActionPanel();
@@ -163,16 +169,17 @@ public class GameManager : MonoBehaviour
         for (int x = 0; x < posX.Length; x++)
         {
             Vector3Int nextTilePosition = new Vector3Int(currentTilePosition.x + posX[x], currentTilePosition.y + posY[x], currentTilePosition.z);
-            if (tilemap.GetTile<Tile>(nextTilePosition) != null)
+            if (tilemap.GetTile<Tile>(nextTilePosition) != null && CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
             {
-                if (CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
+                if (UnitOnTile(nextTilePosition) == false)
                 {
-                    if(UnitOnTile(nextTilePosition) == false)
-                    {
-                        moveTilemap.SetTile(nextTilePosition, moveTile);
-                    }
-                    HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
+                    moveTilemap.SetTile(nextTilePosition, moveTile);
                 }
+                else
+                {
+                    moveTilemap.SetTile(nextTilePosition, occupiedMoveTile);
+                }
+                HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
             }
         }
     }
@@ -205,7 +212,14 @@ public class GameManager : MonoBehaviour
      */
     bool UnitOnTile(Vector3Int position)
     {
-        return false;
+        if(Physics2D.OverlapBox(new Vector2(position.x+unitOffset,position.y+unitOffset),new Vector2(0.1f,0.1f),0.0f))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     /*
