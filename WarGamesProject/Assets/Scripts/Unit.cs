@@ -37,11 +37,14 @@ public class Unit : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(mouseOver && status == UnitStatus.Active && gameManager.currentTurn == TeamTurn.Blue_Turn && gameManager.gameState == GameState.SelectingUnit)
+            if(gameManager.gameState == GameState.SelectingUnit)
             {
-                //Check valid tiles
-                gameManager.FindMoveableTiles(unitType, unitPosition.position);
-                gameManager.SetSelectedUnit(gameObject, unitPosition.position);
+                if (mouseOver && status == UnitStatus.Active && gameManager.currentTurn == TeamTurn.Blue_Turn)
+                {
+                    //Check valid tiles
+                    gameManager.FindMoveableTiles(unitType, unitPosition.position);
+                    gameManager.SetSelectedUnit(gameObject, unitPosition.position);
+                }
             }
         }
     }

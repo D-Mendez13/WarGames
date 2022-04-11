@@ -167,7 +167,10 @@ public class GameManager : MonoBehaviour
             {
                 if (CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
                 {
-                    moveTilemap.SetTile(nextTilePosition, moveTile);
+                    if(UnitOnTile(nextTilePosition) == false)
+                    {
+                        moveTilemap.SetTile(nextTilePosition, moveTile);
+                    }
                     HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
                 }
             }
@@ -195,6 +198,14 @@ public class GameManager : MonoBehaviour
                 return false;
             }
         }
+    }
+
+    /*
+     * Will check if a unit is at the position
+     */
+    bool UnitOnTile(Vector3Int position)
+    {
+        return false;
     }
 
     /*
