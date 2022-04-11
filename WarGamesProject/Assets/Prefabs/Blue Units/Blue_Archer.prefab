@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 4103146231628728633, guid: 50e82a542c732be42a99f9a2e5be79fc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -100,8 +100,6 @@ MonoBehaviour:
   unitType: {fileID: 11400000, guid: 6083834327abda14f9292a8374f10ab6, type: 2}
   teamColor: 0
   status: 0
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
-  inactiveColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
 --- !u!61 &4638420437417221007
 BoxCollider2D:
   m_ObjectHideFlags: 0

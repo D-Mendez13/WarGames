@@ -320,7 +320,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &225673629
 PrefabInstance:
@@ -591,7 +591,7 @@ RectTransform:
   m_Children:
   - {fileID: 1941629481}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -642,9 +642,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentTurn: 0
+  gameState: 0
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
   actionPanel: {fileID: 1941629480}
+  tilemap: {fileID: 1649519989}
+  highlightMap: {fileID: 598315767}
+  moveTilemap: {fileID: 1337656477}
+  highlight: {fileID: 11400000, guid: 46f4fb0bd995c1d4db797828e8ce874c, type: 2}
+  moveTile: {fileID: 11400000, guid: 6796ac49fcf8b1d43a52366455d888bc, type: 2}
+  selectedUnitTile: {fileID: 11400000, guid: 463181e89fbd510449f07134de9f538f, type: 2}
+  grassTile: {fileID: 11400000, guid: d8c4b926212d919419db8f2c389fc219, type: 2}
+  rockTile: {fileID: 11400000, guid: 5941cd42e5ef87346b15954b57ae9038, type: 2}
+  forestTile: {fileID: 11400000, guid: 1caf854193087c648ae2cbc260f687d2, type: 2}
 --- !u!1 &499840974
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,7 +773,7 @@ Transform:
   - {fileID: 1447473696}
   - {fileID: 932088035}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &567486439
 PrefabInstance:
@@ -1256,64 +1266,13 @@ Transform:
   - {fileID: 598315765}
   - {fileID: 1337656475}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1258203874 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7389982133727504691, guid: d5af50d7c7397384eb661cc191129697, type: 3}
   m_PrefabInstance: {fileID: 858176329}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1307311669
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1307311670}
-  - component: {fileID: 1307311671}
-  m_Layer: 0
-  m_Name: MapManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1307311670
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307311669}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1307311671
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307311669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31dee4dc73679b646bff973dda942a2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tilemap: {fileID: 1649519989}
-  highlightMap: {fileID: 598315767}
-  moveTilemap: {fileID: 1337656477}
-  highlight: {fileID: 11400000, guid: 46f4fb0bd995c1d4db797828e8ce874c, type: 2}
-  moveTile: {fileID: 11400000, guid: 6796ac49fcf8b1d43a52366455d888bc, type: 2}
-  grassTile: {fileID: 11400000, guid: d8c4b926212d919419db8f2c389fc219, type: 2}
-  rockTile: {fileID: 11400000, guid: 5941cd42e5ef87346b15954b57ae9038, type: 2}
-  forestTile: {fileID: 11400000, guid: 1caf854193087c648ae2cbc260f687d2, type: 2}
 --- !u!1 &1337656474
 GameObject:
   m_ObjectHideFlags: 0
@@ -1385,7 +1344,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -2234,8 +2193,8 @@ Tilemap:
   - first: {x: 1, y: 3, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 2
-      m_TileSpriteIndex: 2
+      m_TileIndex: 1
+      m_TileSpriteIndex: 1
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -3345,16 +3304,16 @@ Tilemap:
   m_TileAssetArray:
   - m_RefCount: 8
     m_Data: {fileID: 11400000, guid: e24db5daed1424441baf2c80a342a793, type: 2}
-  - m_RefCount: 22
+  - m_RefCount: 23
     m_Data: {fileID: 11400000, guid: b770ff2f8818c5140ba488af4ad7abac, type: 2}
-  - m_RefCount: 130
+  - m_RefCount: 129
     m_Data: {fileID: 11400000, guid: d4faf8f271b5fcd4b9d49ce7f024bc20, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 8
     m_Data: {fileID: 21300000, guid: a336fe608f638844a8714c9850c9e234, type: 3}
-  - m_RefCount: 22
+  - m_RefCount: 23
     m_Data: {fileID: 21300000, guid: 01696c147d473f24ababd7462ddd8113, type: 3}
-  - m_RefCount: 130
+  - m_RefCount: 129
     m_Data: {fileID: 21300000, guid: 0cc64edb0e78e774f8b093bd2b227964, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 160
@@ -3485,7 +3444,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1768728359}
   m_OnClick:
     m_PersistentCalls:
@@ -3626,7 +3585,7 @@ Transform:
   - {fileID: 1818797017}
   - {fileID: 299559958}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1941629480
 GameObject:

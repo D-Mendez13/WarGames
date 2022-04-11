@@ -8,7 +8,6 @@ public class Unit : MonoBehaviour
     public Team teamColor;
     public UnitStatus status;
     private Animator animator;
-    private MapTileManager tileManager;
     private Transform unitPosition;
     private bool mouseOver = false;
     private GameManager gameManager;
@@ -31,29 +30,20 @@ public class Unit : MonoBehaviour
             Debug.LogError("Could not find the Game Manager for the scene");
         }
         animator = GetComponent<Animator>();
-        tileManager = FindObjectOfType<MapTileManager>();
         unitPosition = GetComponent<Transform>();
-        if(tileManager == null)
-        {
-            Debug.LogError("Could not find a Map Tile Manager GameObject in the Scene");
-        }
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if(mouseOver && status == UnitStatus.Active && gameManager.currentTurn == TeamTurn.Blue_Turn)
+            if(mouseOver && status == UnitStatus.Active && gameManager.currentTurn == TeamTurn.Blue_Turn && gameManager.gameState == GameState.SelectingUnit)
             {
                 //Check valid tiles
-                tileManager.FindMoveableTiles(unitType, unitPosition.position);
-                gameManager.SetSelectedUnit(gameObject);
+                gameManager.FindMoveableTiles(unitType, unitPosition.position);
+                gameManager.SetSelectedUnit(gameObject, unitPosition.position);
+                gameManager.gameState = GameState.MovingUnit;
             }
-        }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            
         }
     }
 
