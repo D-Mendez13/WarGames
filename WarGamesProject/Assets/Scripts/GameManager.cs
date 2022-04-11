@@ -73,10 +73,7 @@ public class GameManager : MonoBehaviour
                     GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
                     EnableActionPanel();
                 }
-                else if (moveTilemap.GetTile<Tile>(location).Equals(selectedUnitTile))
-                {
-                    EnableActionPanel();
-                }
+                
             }
         }
 
