@@ -66,12 +66,17 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            //Checks if a move tile is clicked then moves the selected unit to that position
-            if (moveTilemap.GetTile<Tile>(location) == moveTile && gameState == GameState.MovingUnit)
+            if(gameState == GameState.MovingUnit)
             {
-                GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
-                gameState = GameState.UnitAction;
-                EnableActionPanel();
+                if (moveTilemap.GetTile<Tile>(location).Equals(moveTile))
+                {
+                    GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                    EnableActionPanel();
+                }
+                else if (moveTilemap.GetTile<Tile>(location).Equals(selectedUnitTile))
+                {
+                    EnableActionPanel();
+                }
             }
         }
 
@@ -97,15 +102,22 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
+    //ACTION PANEL ---------------------------------------------------------------------------
+    //This section is the code for the action panel that pops up after a unit moves
     public void EnableActionPanel()
     {
         actionPanel.SetActive(true);
+        gameState = GameState.UnitAction;
     }
 
     public void DisableActionPanel()
     {
         actionPanel.SetActive(false);
+    }
+
+    public void AttackButton()
+    {
+        //Attack logic here
     }
 
     public void WaitButton()
@@ -115,6 +127,7 @@ public class GameManager : MonoBehaviour
         moveTilemap.ClearAllTiles();
         gameState=GameState.SelectingUnit;
     }
+    //----------------------------------------------------------------------------------------
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
     {
@@ -139,6 +152,7 @@ public class GameManager : MonoBehaviour
         HighlightMovableTiles(startPos, unit, unit.moveAmount);
 
         moveTilemap.SetTile(startPos, selectedUnitTile);
+        gameState = GameState.MovingUnit;
     }
 
     /*

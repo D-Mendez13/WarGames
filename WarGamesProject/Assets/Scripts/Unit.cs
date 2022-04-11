@@ -42,7 +42,6 @@ public class Unit : MonoBehaviour
                 //Check valid tiles
                 gameManager.FindMoveableTiles(unitType, unitPosition.position);
                 gameManager.SetSelectedUnit(gameObject, unitPosition.position);
-                gameManager.gameState = GameState.MovingUnit;
             }
         }
     }
