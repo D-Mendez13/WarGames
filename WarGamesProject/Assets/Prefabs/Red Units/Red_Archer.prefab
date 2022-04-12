@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6334137856616910967}
   - component: {fileID: 6334137856616910966}
   - component: {fileID: 6334137856616910965}
+  - component: {fileID: 3947159040048947588}
   m_Layer: 0
   m_Name: Red_Archer
   m_TagString: Unit
@@ -98,3 +99,22 @@ MonoBehaviour:
   unitType: {fileID: 11400000, guid: 6083834327abda14f9292a8374f10ab6, type: 2}
   teamColor: 1
   status: 0
+--- !u!95 &3947159040048947588
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6334137856616910964}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: edb7bda4097c6554286e9ed740afc9c8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

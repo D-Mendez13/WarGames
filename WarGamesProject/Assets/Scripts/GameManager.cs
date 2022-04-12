@@ -28,24 +28,24 @@ public class GameManager : MonoBehaviour
     public Color activeColor = new Color(1, 1, 1, 1);
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
 
-    [Header("UI Objects")]
+    [Header("=== UI Objects ===")]
     public GameObject actionPanel;
     public GameObject endTurnButton;
     private GameObject selectedUnit;
     private Vector3 selectedUnitStartingPos;
 
-    [Header("Tilemap layers")]
+    [Header("=== Tilemap Layers ===")]
     public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
     public Tilemap highlightMap; //This tilemap is only used for highlighting the tile the mouse is over.
     public Tilemap moveTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
-    [Header("Tiles")]
+    [Header("=== Tiles ===")]
     public Tile highlight; //The highlight tile that will be placed on the highlightMap layer.
     public Tile moveTile; //The tile that will be placed on the moveTilemap layer.
     public Tile occupiedMoveTile;
     public Tile selectedUnitTile;
 
     //These are the tiles with different move costs and other information stored in them.
-    [Header("Tile Types")]
+    [Header("=== Tile Types ===")]
     public TileType grassTile;
     public TileType rockTile;
     public TileType forestTile;
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
 
         //This highlights the tile the mouse is over.
         highlightMap.ClearAllTiles();
-        if (highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
+        if (gameState != GameState.Menu && highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
         {
             highlightMap.SetTile(location, highlight);
         }
@@ -86,9 +86,15 @@ public class GameManager : MonoBehaviour
         //Right click will cancel an go back to the previous state.
         if (Input.GetMouseButtonDown(1))
         {
-            if(gameState == GameState.SelectingUnit)
+            if(gameState == GameState.Menu)
             {
-                //Open end turn menu
+                endTurnButton.SetActive(false);
+                gameState = GameState.SelectingUnit;
+            }
+            else if(gameState == GameState.SelectingUnit)
+            {
+                endTurnButton.SetActive(true);
+                gameState = GameState.Menu;
             }
             else if(gameState == GameState.MovingUnit)
             {
@@ -131,6 +137,14 @@ public class GameManager : MonoBehaviour
         gameState=GameState.SelectingUnit;
     }
     //----------------------------------------------------------------------------------------
+
+    public void EndTurnButton()
+    {
+        if(currentTurn == TeamTurn.Blue_Turn)
+        {
+            
+        }
+    }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
     {

@@ -434,6 +434,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Red_Cavalry (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3865044034505246215, guid: d53c2db4efdfd3742baf30b9838c61ba, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d53c2db4efdfd3742baf30b9838c61ba, type: 3}
 --- !u!4 &299559958 stripped
@@ -567,7 +571,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 499840976}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -681,7 +685,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 396066428}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 428521715}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: EndTurnButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &396066428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -766,7 +782,7 @@ MonoBehaviour:
   currentTurn: 0
   gameState: 0
   activeColor: {r: 1, g: 1, b: 1, a: 1}
-  inactiveColor: {r: 0.3, g: 0.3, b: 0.3, a: 1}
+  inactiveColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 1}
   actionPanel: {fileID: 1941629480}
   endTurnButton: {fileID: 396066425}
   tilemap: {fileID: 1649519989}
@@ -1289,6 +1305,10 @@ PrefabInstance:
     - target: {fileID: 6334137856616910964, guid: ab973980a25c4a04183a2053b824f1db, type: 3}
       propertyPath: m_Name
       value: Red_Archer (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6334137856616910964, guid: ab973980a25c4a04183a2053b824f1db, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6334137856616910967, guid: ab973980a25c4a04183a2053b824f1db, type: 3}
       propertyPath: m_RootOrder
@@ -3511,6 +3531,8 @@ Tilemap:
     m_Data: {fileID: 11400000, guid: b770ff2f8818c5140ba488af4ad7abac, type: 2}
   - m_RefCount: 129
     m_Data: {fileID: 11400000, guid: d4faf8f271b5fcd4b9d49ce7f024bc20, type: 2}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileSpriteArray:
   - m_RefCount: 8
     m_Data: {fileID: 21300000, guid: a336fe608f638844a8714c9850c9e234, type: 3}
@@ -3518,6 +3540,8 @@ Tilemap:
     m_Data: {fileID: 21300000, guid: 01696c147d473f24ababd7462ddd8113, type: 3}
   - m_RefCount: 129
     m_Data: {fileID: 21300000, guid: 0cc64edb0e78e774f8b093bd2b227964, type: 3}
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
   m_TileMatrixArray:
   - m_RefCount: 160
     m_Data:
@@ -3745,6 +3769,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Red_Cavalry
       objectReference: {fileID: 0}
+    - target: {fileID: 3865044034505246215, guid: d53c2db4efdfd3742baf30b9838c61ba, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d53c2db4efdfd3742baf30b9838c61ba, type: 3}
 --- !u!4 &1818797017 stripped
@@ -3824,11 +3852,11 @@ RectTransform:
   m_Father: {fileID: 358837171}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200, y: -240}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 250, y: 200}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &1941629482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3842,7 +3870,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

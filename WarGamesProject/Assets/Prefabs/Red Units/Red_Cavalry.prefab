@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3865044034505246208}
   - component: {fileID: 3865044034505246209}
   - component: {fileID: 3865044034505246214}
+  - component: {fileID: 5244326858117692090}
   m_Layer: 0
   m_Name: Red_Cavalry
   m_TagString: Unit
@@ -98,3 +99,22 @@ MonoBehaviour:
   unitType: {fileID: 11400000, guid: 8078df05f52dd3748af045a8caa46204, type: 2}
   teamColor: 1
   status: 0
+--- !u!95 &5244326858117692090
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3865044034505246215}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a4f19f554c0c6eb4fbb781ea9c3b514f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
