@@ -14,44 +14,48 @@ public enum GameState
     SelectingTarget
 }
 
-public enum TeamTurn
+public enum Team
 {
-    Blue_Turn,
-    Red_Turn
+    Blue,
+    Red
 }
 
 public class GameManager : MonoBehaviour
 {
-    public TeamTurn currentTurn;
+    public Team currentTurn;
     public GameState gameState;
 
     public Color activeColor = new Color(1, 1, 1, 1);
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
 
-    [Header("=== UI Objects ===")]
+    [Header("UI Objects:")]
     public GameObject actionPanel;
     public GameObject endTurnButton;
-    private GameObject selectedUnit;
-    private Vector3 selectedUnitStartingPos;
 
-    [Header("=== Tilemap Layers ===")]
+    [Header("Tilemap Layers:")]
     public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
     public Tilemap highlightMap; //This tilemap is only used for highlighting the tile the mouse is over.
-    public Tilemap moveTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
-    [Header("=== Tiles ===")]
+    public Tilemap dynamicTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
+
+    [Header("Dynamic Tiles:")]
     public Tile highlight; //The highlight tile that will be placed on the highlightMap layer.
     public Tile moveTile; //The tile that will be placed on the moveTilemap layer.
     public Tile occupiedMoveTile;
     public Tile selectedUnitTile;
+    public Tile attackTile;
 
     //These are the tiles with different move costs and other information stored in them.
-    [Header("=== Tile Types ===")]
+    [Header("Tile Types:")]
     public TileType grassTile;
     public TileType rockTile;
     public TileType forestTile;
 
+    private GameObject selectedUnit;
+    private Vector3 selectedUnitStartingPos;
+    private GameObject targetUnit; //The unit that is being attack will be stored here.
     private Vector3Int location; //The location of the tile that was clicked by the player.
     private float unitOffset = 0.5f; //When moving a player on a tile, add this to their x and y positions so they are centered on the tile.
+    private List<GameObject> inactiveUnits = new List<GameObject>();
 
     void Start()
     {
@@ -65,7 +69,7 @@ public class GameManager : MonoBehaviour
 
         //This highlights the tile the mouse is over.
         highlightMap.ClearAllTiles();
-        if (gameState != GameState.Menu && highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
+        if (gameState == GameState.SelectingUnit || gameState == GameState.MovingUnit && highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
         {
             highlightMap.SetTile(location, highlight);
         }
@@ -74,12 +78,16 @@ public class GameManager : MonoBehaviour
         {
             if(gameState == GameState.MovingUnit)
             {
-                if (moveTilemap.GetTile<Tile>(location) == moveTile && GetSelectedUnit() != null)
+                if (dynamicTilemap.GetTile<Tile>(location) == moveTile && GetSelectedUnit() != null)
                 {
                     GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
                     EnableActionPanel();
                 }
                 
+            }
+            if(gameState == GameState.SelectingTarget)
+            {
+
             }
         }
 
@@ -98,14 +106,14 @@ public class GameManager : MonoBehaviour
             }
             else if(gameState == GameState.MovingUnit)
             {
-                moveTilemap.ClearAllTiles();
+                dynamicTilemap.ClearAllTiles();
                 gameState = GameState.SelectingUnit;
             }
             else if(gameState == GameState.UnitAction)
             {
                 //move unit back to starting positoin
                 selectedUnit.GetComponent<Transform>().position = selectedUnitStartingPos;
-                moveTilemap.ClearAllTiles();
+                dynamicTilemap.ClearAllTiles();
                 DisableActionPanel();
                 gameState = GameState.SelectingUnit;
             }
@@ -133,17 +141,28 @@ public class GameManager : MonoBehaviour
     {
         selectedUnit.GetComponent<Unit>().UnitSetInactive();
         DisableActionPanel();
-        moveTilemap.ClearAllTiles();
+        dynamicTilemap.ClearAllTiles();
         gameState=GameState.SelectingUnit;
     }
     //----------------------------------------------------------------------------------------
 
     public void EndTurnButton()
     {
-        if(currentTurn == TeamTurn.Blue_Turn)
+        if(currentTurn == Team.Blue)
         {
-            
+            currentTurn = Team.Red;
         }
+        else
+        {
+            currentTurn = Team.Blue;
+        }
+
+        for (int i = 0; i < inactiveUnits.Count; i++)
+        {
+            inactiveUnits[i].GetComponent<Unit>().UnitSetActive();
+        }
+        inactiveUnits.Clear();
+        endTurnButton.SetActive(false);
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
@@ -151,6 +170,11 @@ public class GameManager : MonoBehaviour
         selectedUnit = unit;
         selectedUnitStartingPos = startingPosition;
         Debug.Log($"Selected unit: {selectedUnit.name}");
+    }
+
+    public void SetUnitAsTarget(GameObject unit)
+    {
+        targetUnit = unit;
     }
 
     public GameObject GetSelectedUnit()
@@ -164,11 +188,11 @@ public class GameManager : MonoBehaviour
      */
     public void FindMoveableTiles(UnitType unit, Vector3 unitPosition)
     {
-        moveTilemap.ClearAllTiles();
+        dynamicTilemap.ClearAllTiles();
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
         HighlightMovableTiles(startPos, unit, unit.moveAmount);
 
-        moveTilemap.SetTile(startPos, selectedUnitTile);
+        dynamicTilemap.SetTile(startPos, selectedUnitTile);
         gameState = GameState.MovingUnit;
     }
 
@@ -187,15 +211,20 @@ public class GameManager : MonoBehaviour
             {
                 if (UnitOnTile(nextTilePosition) == false)
                 {
-                    moveTilemap.SetTile(nextTilePosition, moveTile);
+                    dynamicTilemap.SetTile(nextTilePosition, moveTile);
                 }
                 else
                 {
-                    moveTilemap.SetTile(nextTilePosition, occupiedMoveTile);
+                    dynamicTilemap.SetTile(nextTilePosition, occupiedMoveTile);
                 }
                 HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
             }
         }
+    }
+
+    void HighlightAttackableTiles(Vector2 unitPos, UnitType unit)
+    {
+        //Highlight tiles in RED if they have an enemy unit on them.
     }
 
     /*
@@ -253,5 +282,10 @@ public class GameManager : MonoBehaviour
         {
             return grassTile;
         }
+    }
+
+    public void addToInactiveList(GameObject g)
+    {
+        inactiveUnits.Add(g);
     }
 }

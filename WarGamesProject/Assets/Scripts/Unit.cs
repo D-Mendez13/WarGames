@@ -6,11 +6,13 @@ public class Unit : MonoBehaviour
 {
     public UnitType unitType;
     public Team teamColor;
-    public UnitStatus status;
+    public bool unitActive = true;
     private Animator animator;
     private Transform unitPosition;
     private bool mouseOver = false;
     private GameManager gameManager;
+
+    private int health;
 
     private void OnMouseEnter()
     {
@@ -31,6 +33,8 @@ public class Unit : MonoBehaviour
         }
         animator = GetComponent<Animator>();
         unitPosition = GetComponent<Transform>();
+
+        health = unitType.maxHealth;
     }
 
     private void Update()
@@ -39,11 +43,11 @@ public class Unit : MonoBehaviour
         {
             if(gameManager.gameState == GameState.SelectingUnit)
             {
-                if (mouseOver && status == UnitStatus.Active && gameManager.currentTurn == TeamTurn.Blue_Turn)
+                if (mouseOver && unitActive && gameManager.currentTurn == Team.Blue)
                 {
-                    //Check valid tiles
-                    gameManager.FindMoveableTiles(unitType, unitPosition.position);
+                    //Check valid
                     gameManager.SetSelectedUnit(gameObject, unitPosition.position);
+                    gameManager.FindMoveableTiles(unitType, unitPosition.position);
                 }
             }
         }
@@ -56,14 +60,14 @@ public class Unit : MonoBehaviour
 
     public void UnitSetActive()
     {
-        status = UnitStatus.Active;
+        unitActive = true;
         animator.enabled = true;
         GetComponent<SpriteRenderer>().color = gameManager.activeColor;
     }
 
     public void UnitSetInactive()
     {
-        status = UnitStatus.Inactive;
+        unitActive = false;
         animator.enabled=false;
         if (teamColor == Team.Blue)
         {
@@ -74,17 +78,6 @@ public class Unit : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = unitType.redInactiveImage;
         }
         GetComponent<SpriteRenderer>().color = gameManager.inactiveColor;
+        gameManager.addToInactiveList(gameObject);
     }
-}
-
-public enum Team
-{
-    Blue,
-    Red
-}
-
-public enum UnitStatus
-{
-    Active,
-    Inactive
 }
