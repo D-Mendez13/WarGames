@@ -129,6 +129,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -952,6 +953,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Blue_MiniArcherMan_14: -4374714132511658928
+      Blue_MiniArcherMan_17: -6975609063245832298
+      Blue_MiniArcherMan_6: 3059037332695748248
+      Blue_MiniArcherMan_13: 727520935937624781
+      Blue_MiniArcherMan_22: 1770778262091221388
+      Blue_MiniArcherMan_9: -4742586601800785375
+      Blue_MiniArcherMan_28: -7497134351996045530
+      Blue_MiniArcherMan_21: 7118283567755690746
+      Blue_MiniArcherMan_18: -6295839832853877433
+      Blue_MiniArcherMan_33: 8627039304204567062
+      Blue_MiniArcherMan_27: -9108518501644466104
+      Blue_MiniArcherMan_15: 5158029771182687796
+      Blue_MiniArcherMan_0: 4103146231628728633
+      Blue_MiniArcherMan_1: 1420120946435914107
+      Blue_MiniArcherMan_10: 6912313791629954146
+      Blue_MiniArcherMan_24: 8799775403038911371
+      Blue_MiniArcherMan_11: 8072877426413625787
+      Blue_MiniArcherMan_20: 3786818782896489595
+      Blue_MiniArcherMan_12: 4603370898022937543
+      Blue_MiniArcherMan_4: 2734577628651674064
+      Blue_MiniArcherMan_5: 1881280978802081249
+      Blue_MiniArcherMan_23: -8484903720302865999
+      Blue_MiniArcherMan_8: -698022064777594532
+      Blue_MiniArcherMan_29: -144489403705758976
+      Blue_MiniArcherMan_7: -6341132485412100774
+      Blue_MiniArcherMan_25: 188571693323060941
+      Blue_MiniArcherMan_30: 4969968980923291516
+      Blue_MiniArcherMan_34: 2010233249559947289
+      Blue_MiniArcherMan_16: -397044494294337929
+      Blue_MiniArcherMan_19: -5999368275097474216
+      Blue_MiniArcherMan_3: 9130373593331056994
+      Blue_MiniArcherMan_32: -3209998676708791961
+      Blue_MiniArcherMan_26: 4682567776245226666
+      Blue_MiniArcherMan_31: -4060202636867831168
+      Blue_MiniArcherMan_2: -603437680563643148
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

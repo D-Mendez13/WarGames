@@ -129,6 +129,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -952,6 +953,42 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Red_MiniArcherMan_9: 5869927281489205280
+      Red_MiniArcherMan_11: 4247177129066336134
+      Red_MiniArcherMan_28: 8635446840438116012
+      Red_MiniArcherMan_32: -7219551540341622571
+      Red_MiniArcherMan_20: -6791771577396390468
+      Red_MiniArcherMan_23: 3537599827227111533
+      Red_MiniArcherMan_4: 6179222609024610880
+      Red_MiniArcherMan_8: 6775259933373085670
+      Red_MiniArcherMan_15: -8326132483307856566
+      Red_MiniArcherMan_17: -6021930269810890618
+      Red_MiniArcherMan_5: 3267531149831004633
+      Red_MiniArcherMan_3: 2643776724023091527
+      Red_MiniArcherMan_6: 1984334467514916869
+      Red_MiniArcherMan_18: -2103434200469905543
+      Red_MiniArcherMan_22: 5823446014865713959
+      Red_MiniArcherMan_21: 3311144762670389178
+      Red_MiniArcherMan_24: -711919424495477326
+      Red_MiniArcherMan_16: -3972858847292602044
+      Red_MiniArcherMan_2: 2277993321226024630
+      Red_MiniArcherMan_30: -1227656224521981260
+      Red_MiniArcherMan_19: 114040369570021588
+      Red_MiniArcherMan_33: 4306542502372418118
+      Red_MiniArcherMan_34: -3854234996357503407
+      Red_MiniArcherMan_10: -691499497661719533
+      Red_MiniArcherMan_14: 6076838717865876336
+      Red_MiniArcherMan_12: -4405288741694551899
+      Red_MiniArcherMan_31: -7900056188786219342
+      Red_MiniArcherMan_27: 389912956974910816
+      Red_MiniArcherMan_7: 3228376587694662898
+      Red_MiniArcherMan_0: -3259343599260541405
+      Red_MiniArcherMan_1: -1473557307892408682
+      Red_MiniArcherMan_26: 4220452418051970760
+      Red_MiniArcherMan_13: -2049265824214059115
+      Red_MiniArcherMan_29: -2495079225749756231
+      Red_MiniArcherMan_25: 6134311227121496181
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

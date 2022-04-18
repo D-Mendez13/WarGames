@@ -114,6 +114,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -832,6 +833,37 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Red_MiniKnightMan_8: 3783220722219546564
+      Red_MiniKnightMan_12: 2778435631750439363
+      Red_MiniKnightMan_16: -90143538702246955
+      Red_MiniKnightMan_29: -8158983084797291436
+      Red_MiniKnightMan_4: -8077597932897907426
+      Red_MiniKnightMan_15: 3823979839535028682
+      Red_MiniKnightMan_24: -3777463413716222146
+      Red_MiniKnightMan_14: 8874205567262577410
+      Red_MiniKnightMan_26: -6140525741785037893
+      Red_MiniKnightMan_20: -4976649208525523410
+      Red_MiniKnightMan_18: 2798217785277246458
+      Red_MiniKnightMan_10: 5805934953719048490
+      Red_MiniKnightMan_25: -438644060382510649
+      Red_MiniKnightMan_11: 6509045230148671865
+      Red_MiniKnightMan_13: -1492833329882490233
+      Red_MiniKnightMan_5: 9092891252105584958
+      Red_MiniKnightMan_28: -6513505600752813830
+      Red_MiniKnightMan_7: -1885492186537737634
+      Red_MiniKnightMan_22: -5193861751867361014
+      Red_MiniKnightMan_23: 1369340990273432344
+      Red_MiniKnightMan_3: -7612477842227751848
+      Red_MiniKnightMan_19: -8345902561863438056
+      Red_MiniKnightMan_9: -4895702330899853657
+      Red_MiniKnightMan_17: 4753623757248875913
+      Red_MiniKnightMan_0: -1378749317270531471
+      Red_MiniKnightMan_2: 8636173680264275750
+      Red_MiniKnightMan_21: -1627458775034587880
+      Red_MiniKnightMan_6: -5930185766044523828
+      Red_MiniKnightMan_27: -134186885272548301
+      Red_MiniKnightMan_1: 1107975960364880493
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

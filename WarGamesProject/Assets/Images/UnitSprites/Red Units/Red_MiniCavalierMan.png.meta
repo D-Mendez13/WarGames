@@ -105,6 +105,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -760,6 +761,34 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Red_MiniCavalierMan_0: 2692192651495464793
+      Red_MiniCavalierMan_7: 926244980653115782
+      Red_MiniCavalierMan_9: -2568642165118355319
+      Red_MiniCavalierMan_13: 8536873308054711532
+      Red_MiniCavalierMan_25: -2293589959634803925
+      Red_MiniCavalierMan_15: -9209274759189794813
+      Red_MiniCavalierMan_26: 3935096756003111900
+      Red_MiniCavalierMan_4: -4025367505677602904
+      Red_MiniCavalierMan_20: -2055274307050710729
+      Red_MiniCavalierMan_22: -2138227250300231590
+      Red_MiniCavalierMan_19: 8894887596099172757
+      Red_MiniCavalierMan_17: 7592373283417172236
+      Red_MiniCavalierMan_23: -158181112160953045
+      Red_MiniCavalierMan_2: 1546842977624377692
+      Red_MiniCavalierMan_1: 6921840934380660075
+      Red_MiniCavalierMan_10: 26677703519539207
+      Red_MiniCavalierMan_3: 4200118776205572483
+      Red_MiniCavalierMan_21: 3231895660109405549
+      Red_MiniCavalierMan_5: -4139845479876188488
+      Red_MiniCavalierMan_18: -8580485979406075966
+      Red_MiniCavalierMan_11: -3344797426946715121
+      Red_MiniCavalierMan_14: -8240248735543258772
+      Red_MiniCavalierMan_8: -3469455592523032924
+      Red_MiniCavalierMan_12: -2775725867395769170
+      Red_MiniCavalierMan_6: -639722206159391851
+      Red_MiniCavalierMan_16: 2288686706672457915
+      Red_MiniCavalierMan_24: -3345826121450531191
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -102,6 +102,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -736,6 +737,33 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      Blue_MiniPikeMan_17: -1982836612174628269
+      Blue_MiniPikeMan_2: -7527862917162792497
+      Blue_MiniPikeMan_1: -6554873811596263847
+      Blue_MiniPikeMan_19: -3254598309313125389
+      Blue_MiniPikeMan_25: -3500747893904520549
+      Blue_MiniPikeMan_9: 4875957398324032192
+      Blue_MiniPikeMan_22: -1003425644739373410
+      Blue_MiniPikeMan_18: 7988087286899941864
+      Blue_MiniPikeMan_21: -1037463404036307366
+      Blue_MiniPikeMan_12: -4186813558384393012
+      Blue_MiniPikeMan_14: 2102206112682327100
+      Blue_MiniPikeMan_6: -7312657187055258535
+      Blue_MiniPikeMan_23: 8335215949333895912
+      Blue_MiniPikeMan_11: -1900904065560902158
+      Blue_MiniPikeMan_10: 2804029637724379813
+      Blue_MiniPikeMan_15: 1936032656887603906
+      Blue_MiniPikeMan_20: 8894606969709022038
+      Blue_MiniPikeMan_4: 3488006344745207264
+      Blue_MiniPikeMan_16: -7465644009150174949
+      Blue_MiniPikeMan_5: 974354755653015901
+      Blue_MiniPikeMan_7: -2513622631247626208
+      Blue_MiniPikeMan_8: 5223078291630092989
+      Blue_MiniPikeMan_0: 2937557478537688234
+      Blue_MiniPikeMan_24: 4349678041243349562
+      Blue_MiniPikeMan_13: -7633375720775338188
+      Blue_MiniPikeMan_3: 5897964853569360232
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
