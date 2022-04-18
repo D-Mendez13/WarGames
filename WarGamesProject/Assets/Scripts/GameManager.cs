@@ -16,6 +16,7 @@ public enum GameState
 
 public enum Team
 {
+    None,
     Blue,
     Red
 }
@@ -38,11 +39,7 @@ public class GameManager : MonoBehaviour
     public Tilemap dynamicTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
 
     [Header("Dynamic Tiles:")]
-    public Tile highlight; //The highlight tile that will be placed on the highlightMap layer.
-    public Tile moveTile; //The tile that will be placed on the moveTilemap layer.
-    public Tile occupiedMoveTile;
-    public Tile selectedUnitTile;
-    public Tile attackTile;
+    public DynamicTileBank dynamicTiles;
 
     //These are the tiles with different move costs and other information stored in them.
     [Header("Tile Types:")]
@@ -60,6 +57,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         gameState = GameState.SelectingUnit;
+        currentTurn = Team.Blue;
     }
 
     private void Update()
@@ -71,14 +69,14 @@ public class GameManager : MonoBehaviour
         highlightMap.ClearAllTiles();
         if (gameState == GameState.SelectingUnit || gameState == GameState.MovingUnit && highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
         {
-            highlightMap.SetTile(location, highlight);
+            highlightMap.SetTile(location, dynamicTiles.highlightTile);
         }
 
         if (Input.GetMouseButtonDown(0))
         {
             if(gameState == GameState.MovingUnit)
             {
-                if (dynamicTilemap.GetTile<Tile>(location) == moveTile && GetSelectedUnit() != null)
+                if (dynamicTilemap.GetTile<Tile>(location) == dynamicTiles.moveTile && GetSelectedUnit() != null)
                 {
                     GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
                     EnableActionPanel();
@@ -192,7 +190,7 @@ public class GameManager : MonoBehaviour
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
         HighlightMovableTiles(startPos, unit, unit.moveAmount);
 
-        dynamicTilemap.SetTile(startPos, selectedUnitTile);
+        dynamicTilemap.SetTile(startPos, dynamicTiles.selectedUnitTile);
         gameState = GameState.MovingUnit;
     }
 
@@ -209,13 +207,20 @@ public class GameManager : MonoBehaviour
             Vector3Int nextTilePosition = new Vector3Int(currentTilePosition.x + posX[x], currentTilePosition.y + posY[x], currentTilePosition.z);
             if (tilemap.GetTile<Tile>(nextTilePosition) != null && CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
             {
-                if (UnitOnTile(nextTilePosition) == false)
+                if (UnitOnTile(nextTilePosition))
                 {
-                    dynamicTilemap.SetTile(nextTilePosition, moveTile);
+                    if (UnitTeamColor(nextTilePosition) == selectedUnit.GetComponent<Unit>().teamColor)
+                    {
+                        dynamicTilemap.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
+                    }
+                    else
+                    {
+                        dynamicTilemap.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                    }
                 }
                 else
                 {
-                    dynamicTilemap.SetTile(nextTilePosition, occupiedMoveTile);
+                    dynamicTilemap.SetTile(nextTilePosition, dynamicTiles.moveTile);
                 }
                 HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
             }
@@ -255,13 +260,30 @@ public class GameManager : MonoBehaviour
      */
     bool UnitOnTile(Vector3Int position)
     {
-        if(Physics2D.OverlapBox(new Vector2(position.x+unitOffset,position.y+unitOffset),new Vector2(0.1f,0.1f),0.0f))
+        Collider2D unit = Physics2D.OverlapBox(new Vector2(position.x + unitOffset, position.y + unitOffset), new Vector2(0.1f, 0.1f), 0.0f);
+
+        if(unit != null)
         {
+            Debug.Log(unit.GetComponent<Unit>().teamColor);
             return true;
         }
         else
         {
             return false;
+        }
+    }
+
+    Team UnitTeamColor(Vector3Int position)
+    {
+        Collider2D unit = Physics2D.OverlapBox(new Vector2(position.x + unitOffset, position.y + unitOffset), new Vector2(0.1f, 0.1f), 0.0f);
+
+        if(unit != null)
+        {
+            return unit.GetComponent<Unit>().teamColor;
+        }
+        else
+        {
+            return Team.None;
         }
     }
 

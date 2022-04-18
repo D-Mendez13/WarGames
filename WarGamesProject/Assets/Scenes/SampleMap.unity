@@ -851,11 +851,7 @@ MonoBehaviour:
   tilemap: {fileID: 1649519989}
   highlightMap: {fileID: 598315767}
   dynamicTilemap: {fileID: 1337656477}
-  highlight: {fileID: 11400000, guid: 46f4fb0bd995c1d4db797828e8ce874c, type: 2}
-  moveTile: {fileID: 11400000, guid: 6796ac49fcf8b1d43a52366455d888bc, type: 2}
-  occupiedMoveTile: {fileID: 11400000, guid: 51f505504c304fb49891073fe1425a68, type: 2}
-  selectedUnitTile: {fileID: 11400000, guid: 463181e89fbd510449f07134de9f538f, type: 2}
-  attackTile: {fileID: 11400000, guid: d6c1e990f9cc7ef40bb09c184b1d6adf, type: 2}
+  dynamicTiles: {fileID: 11400000, guid: 811c7f3f64ae89640b64ce9813507abd, type: 2}
   grassTile: {fileID: 11400000, guid: d8c4b926212d919419db8f2c389fc219, type: 2}
   rockTile: {fileID: 11400000, guid: 5941cd42e5ef87346b15954b57ae9038, type: 2}
   forestTile: {fileID: 11400000, guid: 1caf854193087c648ae2cbc260f687d2, type: 2}
