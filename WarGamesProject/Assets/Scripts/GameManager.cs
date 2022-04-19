@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 {
     public Team currentTurn;
     public GameState gameState;
+    private GameState updateGameState;
 
     public Color activeColor = new Color(1, 1, 1, 1);
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
@@ -36,7 +37,8 @@ public class GameManager : MonoBehaviour
     [Header("Tilemap Layers:")]
     public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
     public Tilemap highlightMap; //This tilemap is only used for highlighting the tile the mouse is over.
-    public Tilemap dynamicTilemap; //Places a unique highlight that shows the player what tile their unit can move on.
+    public Tilemap dynamicTilemapTopLayer; //Places a unique highlight that shows the player what tile their unit can move on.
+    public Tilemap dynamicTilemapBottomLayer;
 
     [Header("Dynamic Tiles:")]
     public DynamicTileBank dynamicTiles;
@@ -74,20 +76,24 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if(gameState == GameState.MovingUnit)
+            if (gameState == GameState.SelectingTarget)
             {
-                if (dynamicTilemap.GetTile<Tile>(location) == dynamicTiles.moveTile && GetSelectedUnit() != null)
+                //TODO - Check for player clicking a RED tile to attack.
+            }
+
+            if (gameState == GameState.MovingUnit)
+            {
+                if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.moveTile || dynamicTilemapTopLayer.GetTile<Tile>(location) == dynamicTiles.selectedUnitTile)
                 {
                     GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                    //TODO - Check if there are enemies to attack to enable the Attack button in the action panel.
                     EnableActionPanel();
                 }
                 
             }
-            if(gameState == GameState.SelectingTarget)
-            {
-
-            }
         }
+
+        IsUnitMoving();
 
         //Right click will cancel an go back to the previous state.
         if (Input.GetMouseButtonDown(1))
@@ -104,14 +110,16 @@ public class GameManager : MonoBehaviour
             }
             else if(gameState == GameState.MovingUnit)
             {
-                dynamicTilemap.ClearAllTiles();
+                dynamicTilemapTopLayer.ClearAllTiles();
+                dynamicTilemapBottomLayer.ClearAllTiles();
                 gameState = GameState.SelectingUnit;
             }
             else if(gameState == GameState.UnitAction)
             {
                 //move unit back to starting positoin
                 selectedUnit.GetComponent<Transform>().position = selectedUnitStartingPos;
-                dynamicTilemap.ClearAllTiles();
+                dynamicTilemapTopLayer.ClearAllTiles();
+                dynamicTilemapBottomLayer.ClearAllTiles();
                 DisableActionPanel();
                 gameState = GameState.SelectingUnit;
             }
@@ -121,6 +129,7 @@ public class GameManager : MonoBehaviour
     //This section is the code for the action panel that pops up after a unit moves
     public void EnableActionPanel()
     {
+        //TODO - Have Action Panel pop up to the left or right of the selected unit.
         actionPanel.SetActive(true);
         gameState = GameState.UnitAction;
     }
@@ -133,13 +142,17 @@ public class GameManager : MonoBehaviour
     public void AttackButton()
     {
         //Attack logic here
+        //TODO - Clear the bottom layer of move tiles
+        //TODO - Highlight potential targets in RED
+        gameState = GameState.SelectingTarget;
     }
 
     public void WaitButton()
     {
         selectedUnit.GetComponent<Unit>().UnitSetInactive();
         DisableActionPanel();
-        dynamicTilemap.ClearAllTiles();
+        dynamicTilemapTopLayer.ClearAllTiles();
+        dynamicTilemapBottomLayer.ClearAllTiles();
         gameState=GameState.SelectingUnit;
     }
     //----------------------------------------------------------------------------------------
@@ -186,12 +199,12 @@ public class GameManager : MonoBehaviour
      */
     public void FindMoveableTiles(UnitType unit, Vector3 unitPosition)
     {
-        dynamicTilemap.ClearAllTiles();
+        dynamicTilemapBottomLayer.ClearAllTiles();
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
         HighlightMovableTiles(startPos, unit, unit.moveAmount);
 
-        dynamicTilemap.SetTile(startPos, dynamicTiles.selectedUnitTile);
-        gameState = GameState.MovingUnit;
+        dynamicTilemapTopLayer.SetTile(startPos, dynamicTiles.selectedUnitTile);
+        SetUnitMoving();
     }
 
     /*
@@ -211,16 +224,16 @@ public class GameManager : MonoBehaviour
                 {
                     if (UnitTeamColor(nextTilePosition) == selectedUnit.GetComponent<Unit>().teamColor)
                     {
-                        dynamicTilemap.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
+                        dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
                     }
                     else
                     {
-                        dynamicTilemap.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                        dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
                     }
                 }
                 else
                 {
-                    dynamicTilemap.SetTile(nextTilePosition, dynamicTiles.moveTile);
+                    dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.moveTile);
                 }
                 HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
             }
@@ -309,5 +322,19 @@ public class GameManager : MonoBehaviour
     public void addToInactiveList(GameObject g)
     {
         inactiveUnits.Add(g);
+    }
+
+    public void IsUnitMoving()
+    {
+        if(updateGameState == GameState.MovingUnit)
+        {
+            gameState = GameState.MovingUnit;
+            updateGameState = GameState.Menu;
+        }
+    }
+
+    public void SetUnitMoving()
+    {
+        updateGameState = GameState.MovingUnit;
     }
 }
