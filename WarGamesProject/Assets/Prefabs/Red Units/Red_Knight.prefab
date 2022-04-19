@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitType: {fileID: 11400000, guid: a2e2990cfef195f4fa3f77a14b0741c6, type: 2}
-  teamColor: 1
+  teamColor: 2
   unitActive: 1
 --- !u!61 &6692200434819724594
 BoxCollider2D:

@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitType: {fileID: 11400000, guid: 6083834327abda14f9292a8374f10ab6, type: 2}
-  teamColor: 1
+  teamColor: 2
   unitActive: 1
 --- !u!95 &3947159040048947588
 Animator:

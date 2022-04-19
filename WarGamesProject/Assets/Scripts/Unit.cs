@@ -43,7 +43,7 @@ public class Unit : MonoBehaviour
         {
             if(gameManager.gameState == GameState.SelectingUnit)
             {
-                if (mouseOver && unitActive && gameManager.currentTurn == Team.Blue)
+                if (mouseOver && unitActive && teamColor == gameManager.currentTurn)
                 {
                     //Check valid
                     gameManager.SetSelectedUnit(gameObject, unitPosition.position);
