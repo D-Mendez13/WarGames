@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Objects:")]
     public GameObject actionPanel;
+    public GameObject attackButton;
     public GameObject endTurnButton;
 
     [Header("Tilemap Layers:")]
@@ -51,9 +52,12 @@ public class GameManager : MonoBehaviour
 
     private GameObject selectedUnit;
     private Vector3 selectedUnitStartingPos;
+    private Transform selectedUnitPosition;
     private GameObject targetUnit; //The unit that is being attack will be stored here.
     private Vector3Int location; //The location of the tile that was clicked by the player.
     private float unitOffset = 0.5f; //When moving a player on a tile, add this to their x and y positions so they are centered on the tile.
+    private int[] posX = { -1, 0, 0, 1 };
+    private int[] posY = { 0, 1, -1, 0 };
     private List<GameObject> inactiveUnits = new List<GameObject>();
 
     void Start()
@@ -85,8 +89,9 @@ public class GameManager : MonoBehaviour
             {
                 if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.moveTile || dynamicTilemapTopLayer.GetTile<Tile>(location) == dynamicTiles.selectedUnitTile)
                 {
-                    GetSelectedUnit().GetComponent<Transform>().position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                    selectedUnitPosition.position = new Vector2(location.x + unitOffset, location.y + unitOffset);
                     //TODO - Check if there are enemies to attack to enable the Attack button in the action panel.
+                    IsEnemyInRange(new Vector3Int((int)selectedUnitPosition.position.x, (int)selectedUnitPosition.position.y, (int)selectedUnitPosition.position.z), selectedUnit.GetComponent<Unit>().unitType.attackRange);
                     EnableActionPanel();
                 }
                 
@@ -117,7 +122,7 @@ public class GameManager : MonoBehaviour
             else if(gameState == GameState.UnitAction)
             {
                 //move unit back to starting positoin
-                selectedUnit.GetComponent<Transform>().position = selectedUnitStartingPos;
+                selectedUnitPosition.position = selectedUnitStartingPos;
                 dynamicTilemapTopLayer.ClearAllTiles();
                 dynamicTilemapBottomLayer.ClearAllTiles();
                 DisableActionPanel();
@@ -180,6 +185,7 @@ public class GameManager : MonoBehaviour
     {
         selectedUnit = unit;
         selectedUnitStartingPos = startingPosition;
+        selectedUnitPosition = selectedUnit.GetComponent<Transform>();
         Debug.Log($"Selected unit: {selectedUnit.name}");
     }
 
@@ -213,8 +219,6 @@ public class GameManager : MonoBehaviour
      */
     void HighlightMovableTiles(Vector3Int currentTilePosition, UnitType unit, int remaningMoves)
     {
-        int[] posX = { -1, 0, 0, 1 };
-        int[] posY = { 0, 1, -1, 0 };
         for (int x = 0; x < posX.Length; x++)
         {
             Vector3Int nextTilePosition = new Vector3Int(currentTilePosition.x + posX[x], currentTilePosition.y + posY[x], currentTilePosition.z);
@@ -235,7 +239,16 @@ public class GameManager : MonoBehaviour
                 {
                     dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.moveTile);
                 }
-                HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
+
+                if(dynamicTilemapBottomLayer.GetTile<Tile>(nextTilePosition) == dynamicTiles.attackTile)
+                {
+                    //If enemy is detected on the checked tile, pass in 0 to remaning moves for the next function call so unit can not pass through enemies.
+                    HighlightMovableTiles(nextTilePosition, unit, 0);
+                }
+                else
+                {
+                    HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
+                }
             }
         }
     }
@@ -277,7 +290,6 @@ public class GameManager : MonoBehaviour
 
         if(unit != null)
         {
-            Debug.Log(unit.GetComponent<Unit>().teamColor);
             return true;
         }
         else
@@ -336,5 +348,10 @@ public class GameManager : MonoBehaviour
     public void SetUnitMoving()
     {
         updateGameState = GameState.MovingUnit;
+    }
+
+    public void IsEnemyInRange(Vector3Int unitPosition, int attackRange)
+    {
+
     }
 }
