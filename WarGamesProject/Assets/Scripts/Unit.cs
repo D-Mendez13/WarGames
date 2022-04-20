@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour
     private Transform unitPosition;
     private bool mouseOver = false;
     private GameManager gameManager;
+    public GameObject healthBarUI;
 
     public int health;
 
@@ -84,5 +85,6 @@ public class Unit : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+        healthBarUI.SetActive(true);
     }
 }

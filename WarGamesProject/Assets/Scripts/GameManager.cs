@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
     private GameObject targetUnit; //The unit that is being attack will be stored here.
     private Vector3Int location; //The location of the tile that was clicked by the player.
     private float unitOffset = 0.5f; //When moving a player on a tile, add this to their x and y positions so they are centered on the tile.
+    private float apOffset = 1.0f;
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
     private List<GameObject> inactiveUnits = new List<GameObject>();
@@ -151,7 +152,14 @@ public class GameManager : MonoBehaviour
     //This section is the code for the action panel that pops up after a unit moves
     public void EnableActionPanel()
     {
-        //TODO - Have Action Panel pop up to the left or right of the selected unit.
+        if (tilemap.GetTile<Tile>(new Vector3Int((int)selectedUnitPosition.position.x - 1, (int)selectedUnitPosition.position.y, (int)selectedUnitPosition.position.z)) == null)
+        {
+            actionPanel.GetComponent<Transform>().position = new Vector3(selectedUnitPosition.position.x + apOffset, selectedUnitPosition.position.y, selectedUnitPosition.position.z);
+        }
+        else
+        {
+            actionPanel.GetComponent<Transform>().position = new Vector3(selectedUnitPosition.position.x - apOffset, selectedUnitPosition.position.y, selectedUnitPosition.position.z);
+        }
         actionPanel.SetActive(true);
         gameState = GameState.UnitAction;
     }
