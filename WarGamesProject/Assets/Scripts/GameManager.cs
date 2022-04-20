@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
     private List<GameObject> inactiveUnits = new List<GameObject>();
+    private List<GameObject> blueUnits = new List<GameObject>();
+    private List<GameObject> redUnits = new List<GameObject>();
 
     void Start()
     {
