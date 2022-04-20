@@ -275,7 +275,7 @@ public class GameManager : MonoBehaviour
                     dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.moveTile);
                 }
 
-                if(dynamicTilemapBottomLayer.GetTile<Tile>(nextTilePosition) == dynamicTiles.attackTile)
+                if(dynamicTilemapBottomLayer.GetTile<Tile>(nextTilePosition) == dynamicTiles.occupiedMoveTile && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
                 {
                     //If enemy is detected on the checked tile, pass in 0 to remaning moves for the next function call so unit can not pass through enemies.
                     HighlightMovableTiles(nextTilePosition, unit, 0);
