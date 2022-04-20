@@ -12,7 +12,7 @@ public class Unit : MonoBehaviour
     private bool mouseOver = false;
     private GameManager gameManager;
 
-    private int health;
+    public int health;
 
     private void OnMouseEnter()
     {
@@ -79,5 +79,10 @@ public class Unit : MonoBehaviour
         }
         GetComponent<SpriteRenderer>().color = gameManager.inactiveColor;
         gameManager.addToInactiveList(gameObject);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        health -= damage;
     }
 }
