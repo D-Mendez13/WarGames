@@ -232,6 +232,13 @@ public class GameManager : MonoBehaviour
         {
             Destroy(targetUnit);
         }
+        else
+        {
+            if(defender.unitType.attackRange == attacker.unitType.attackRange)
+            {
+                attacker.TakeDamage(defender.unitType.attack / 2 );
+            }
+        }
     }
 
     /*

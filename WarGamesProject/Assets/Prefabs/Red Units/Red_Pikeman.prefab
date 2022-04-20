@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6002211909649484179}
   - component: {fileID: 6002211909649484178}
   - component: {fileID: 728034406567941911}
+  - component: {fileID: 4959827853684960665}
   m_Layer: 0
   m_Name: Red_Pikeman
   m_TagString: Unit
@@ -130,6 +131,26 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!95 &4959827853684960665
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6002211909649484177}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6b9dd618f1170cb40ad6db83bc20c9f2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1317148043606900910
 PrefabInstance:
   m_ObjectHideFlags: 0
