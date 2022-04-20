@@ -268,14 +268,7 @@ public class GameManager : MonoBehaviour
             {
                 if (UnitOnTile(nextTilePosition))
                 {
-                    if (UnitTeamColor(nextTilePosition) == selectedUnit.GetComponent<Unit>().teamColor)
-                    {
-                        dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
-                    }
-                    else
-                    {
-                        dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
-                    }
+                    dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
                 }
                 else
                 {
