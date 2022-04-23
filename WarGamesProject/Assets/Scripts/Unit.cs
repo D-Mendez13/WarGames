@@ -36,6 +36,7 @@ public class Unit : MonoBehaviour
         unitPosition = GetComponent<Transform>();
 
         health = unitType.maxHealth;
+        gameManager.AddToUnitList(gameObject);
     }
 
     private void Update()
@@ -52,11 +53,6 @@ public class Unit : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void MoveUnit()
-    {
-        
     }
 
     public void UnitSetActive()
@@ -79,7 +75,6 @@ public class Unit : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = unitType.redInactiveImage;
         }
         GetComponent<SpriteRenderer>().color = gameManager.inactiveColor;
-        gameManager.addToInactiveList(gameObject);
     }
 
     public void TakeDamage(int damage)

@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
     private float apOffset = 1.0f;
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
-    private List<GameObject> inactiveUnits = new List<GameObject>();
     private List<GameObject> blueUnits = new List<GameObject>();
     private List<GameObject> redUnits = new List<GameObject>();
 
@@ -141,6 +140,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        
+    }
+
     void ReturnToSelectingUnit()
     {
         //move unit back to starting positoin
@@ -190,21 +194,26 @@ public class GameManager : MonoBehaviour
 
     public void EndTurnButton()
     {
-        if(currentTurn == Team.Blue)
+        endTurnButton.SetActive(false);
+
+        if (currentTurn == Team.Blue)
         {
+            for (int i = 0; i < blueUnits.Count; i++)
+            {
+                blueUnits[i].GetComponent<Unit>().UnitSetActive();
+            }
+            blueUnits.Clear();
             currentTurn = Team.Red;
         }
         else
         {
+            for (int i = 0; i < redUnits.Count; i++)
+            {
+                redUnits[i].GetComponent<Unit>().UnitSetActive();
+            }
+            redUnits.Clear();
             currentTurn = Team.Blue;
         }
-
-        for (int i = 0; i < inactiveUnits.Count; i++)
-        {
-            inactiveUnits[i].GetComponent<Unit>().UnitSetActive();
-        }
-        inactiveUnits.Clear();
-        endTurnButton.SetActive(false);
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
@@ -412,9 +421,16 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void addToInactiveList(GameObject g)
+    public void AddToUnitList(GameObject g)
     {
-        inactiveUnits.Add(g);
+        if(g.GetComponent<Unit>().teamColor == Team.Blue)
+        {
+            blueUnits.Add(g);
+        }
+        else if(g.GetComponent<Unit>().teamColor == Team.Red)
+        {
+            redUnits.Add(g);
+        }
     }
 
     public void IsUnitMoving()
