@@ -43,6 +43,7 @@ public class Unit : MonoBehaviour
         {
             gameManager.IncreaseRedUnitCount();
         }
+        gameManager.AddToUnitList(gameObject);
 
         health = unitType.maxHealth;
     }
@@ -55,7 +56,6 @@ public class Unit : MonoBehaviour
             {
                 if (mouseOver && unitActive && teamColor == gameManager.currentTurn)
                 {
-                    //Check valid
                     gameManager.SetSelectedUnit(gameObject, unitPosition.position);
                     gameManager.FindMoveableTiles(unitType, unitPosition.position);
                 }
@@ -83,12 +83,15 @@ public class Unit : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = unitType.redInactiveImage;
         }
         GetComponent<SpriteRenderer>().color = gameManager.inactiveColor;
-        gameManager.AddToInactiveList(gameObject);
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
+        if(health <= 0)
+        {
+            health = 0;
+        }
         healthBarUI.SetActive(true);
     }
 

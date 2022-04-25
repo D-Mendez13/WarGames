@@ -114,7 +114,7 @@ Transform:
   - {fileID: 7665176400006315394}
   - {fileID: 7665176398669967318}
   m_Father: {fileID: 7665176399373652927}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!156049354 &7665176398421981174
 Grid:
@@ -161,7 +161,7 @@ RectTransform:
   m_Children:
   - {fileID: 7665176398737146212}
   m_Father: {fileID: 7665176399373652927}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -187,7 +187,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 12
   m_TargetDisplay: 0
 --- !u!114 &7665176398605383807
 MonoBehaviour:
@@ -562,51 +562,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &7665176398928878014
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7665176398928878008}
-  - component: {fileID: 7665176398928878009}
-  m_Layer: 0
-  m_Name: AI Brain
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7665176398928878008
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7665176398928878014}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7665176399373652927}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7665176398928878009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7665176398928878014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14c7429e146831747b0dd765a006447a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameManager: {fileID: 0}
 --- !u!1 &7665176398947975660
 GameObject:
   m_ObjectHideFlags: 0
@@ -2828,7 +2783,7 @@ RectTransform:
   - {fileID: 7665176399293651393}
   - {fileID: 7665176398733924610}
   m_Father: {fileID: 7665176399373652927}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2854,7 +2809,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 13
   m_TargetDisplay: 0
 --- !u!114 &7665176399312191740
 MonoBehaviour:
@@ -3059,7 +3014,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7665176398928878008}
   - {fileID: 7665176398605383805}
   - {fileID: 7665176399312191742}
   - {fileID: 7665176398421981169}
@@ -3083,8 +3037,8 @@ MonoBehaviour:
   gameState: 0
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   inactiveColor: {r: 0.47058824, g: 0.47058824, b: 0.47058824, a: 1}
-  enableAI: 0
-  aiBrain: {fileID: 7665176398928878014}
+  enableBlueAI: 0
+  enableRedAI: 1
   actionPanel: {fileID: 7665176398737146213}
   endTurnButton: {fileID: 7665176399338935604}
   blueWinsText: {fileID: 7665176399586746628}
@@ -3263,7 +3217,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7665176399373652927}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7665176399576584610
 MonoBehaviour:

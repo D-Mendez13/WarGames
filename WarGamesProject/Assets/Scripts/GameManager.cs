@@ -10,7 +10,6 @@ public enum GameState
 {
     Menu,
     PlacingUnits,
-    StartingTurn,
     SelectingUnit,
     MovingUnit,
     UnitWalking,
@@ -36,8 +35,8 @@ public class GameManager : MonoBehaviour
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
 
     [Header("AI:")]
-    public bool enableAI = true;
-    public GameObject aiBrain;
+    public bool enableBlueAI = false;
+    public bool enableRedAI = true;
 
     [Header("UI Objects:")]
     public GameObject actionPanel;
@@ -72,9 +71,11 @@ public class GameManager : MonoBehaviour
     private float apOffset = 1.0f;
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
-    private List<GameObject> inactiveUnits = new List<GameObject>();
     private int blueUnitCount;
     private int redUnitCount;
+    private int AIUnitIndex;
+    private List<GameObject> BlueUnitList = new List<GameObject>();
+    private List<GameObject> RedUnitList = new List<GameObject>();
 
     void Start()
     {
@@ -94,10 +95,27 @@ public class GameManager : MonoBehaviour
             highlightMap.SetTile(location, dynamicTiles.highlightTile);
         }
 
+        //Check input for player or AI
+        if (enableBlueAI && currentTurn == Team.Blue)
+        {
+            AIInput(BlueUnitList);
+        }
+        else if(enableRedAI && currentTurn == Team.Red)
+        {
+            AIInput(RedUnitList);
+        }
+        else
+        {
+            PlayerInput(location);
+        }
+    }
+
+    void PlayerInput(Vector3Int location)
+    {
         if (gameState == GameState.UnitWalking)
         {
-            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x,movePoint.y,0f), moveSpeed * Time.deltaTime);
-            if(selectedUnitPosition.position == movePoint)
+            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x, movePoint.y, 0f), moveSpeed * Time.deltaTime);
+            if (selectedUnitPosition.position == movePoint)
             {
                 EnableActionPanel();
             }
@@ -112,11 +130,11 @@ public class GameManager : MonoBehaviour
 
             if (gameState == GameState.SelectingTarget)
             {
-                if(dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.attackTile)
+                if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.attackTile)
                 {
                     SetTargetUnit(location);
                     Combat();
-                    if(selectedUnit != null)
+                    if (selectedUnit != null)
                     {
                         selectedUnit.GetComponent<Unit>().UnitSetInactive();
                     }
@@ -132,11 +150,11 @@ public class GameManager : MonoBehaviour
                 if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.moveTile || dynamicTilemapTopLayer.GetTile<Tile>(location) == dynamicTiles.selectedUnitTile)
                 {
                     //selectedUnitPosition.position = new Vector2(location.x + unitOffset, location.y + unitOffset);
-                    movePoint = new Vector3(location.x + unitOffset, location.y+unitOffset, 0f);
+                    movePoint = new Vector3(location.x + unitOffset, location.y + unitOffset, 0f);
                     selectedUnit.GetComponent<Animator>().SetBool("walking", true);
                     gameState = GameState.UnitWalking;
                 }
-                
+
             }
         }
 
@@ -170,6 +188,59 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    /*
+     AI steps
+     1. Find all of it's active units at the start of the turn.
+     2. Select one unit from that list that is not inactive. If none are left active, End Turn.
+     3. First check if there is an enemy unit within the move range of the unit.
+        3A. If true, Step 4
+        3B. If false, check if there is an enemy unit within the range of 2* the move amount.
+            3BA. If true, 
+            3BB. If false, set unit to Wait (inactive). Then return to step 2.
+     4. Find the enemy unit that has the least amount of health and set that as the target.
+     5. Move to a tile that is within attacking range to the targeted unit.
+     6. Attack the target. Then return to step 2.
+    */
+    void AIInput(List<GameObject> unitList)
+    {
+        if(gameState == GameState.SelectingUnit)
+        {
+            if (unitList[AIUnitIndex] != null && unitList[AIUnitIndex].activeSelf)
+            {
+                SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
+                FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
+                //TODO - Find Target
+                gameState = GameState.MovingUnit;
+            }
+        }
+
+        if(gameState == GameState.MovingUnit)
+        {
+
+        }
+
+        if(gameState == GameState.UnitWalking)
+        {
+
+        }
+
+        if(gameState == GameState.UnitAction)
+        {
+
+        }
+
+        if(gameState == GameState.SelectingTarget)
+        {
+
+        }
+
+        if(gameState == GameState.GameOver)
+        {
+
+        }
+        
     }
 
     void ReturnToSelectingUnit()
@@ -230,27 +301,23 @@ public class GameManager : MonoBehaviour
     {
         endTurnButton.SetActive(false);
 
-        if(inactiveUnits.Count > 0)
-        {
-            for(int i = 0; i < inactiveUnits.Count; i++)
-            {
-                if(inactiveUnits[i] != null)
-                {
-                    inactiveUnits[i].GetComponent<Unit>().UnitSetActive();
-                }
-            }
-        }
-
         if(currentTurn == Team.Blue)
         {
             currentTurn = Team.Red;
+            foreach (GameObject unit in BlueUnitList)
+            {
+                unit.GetComponent<Unit>().UnitSetActive();
+            }
         }
         else
         {
             currentTurn = Team.Blue;
+            foreach (GameObject unit in RedUnitList)
+            {
+                unit.GetComponent<Unit>().UnitSetActive();
+            }
         }
 
-        inactiveUnits.Clear();
         gameState=GameState.SelectingUnit;
     }
 
@@ -288,7 +355,7 @@ public class GameManager : MonoBehaviour
             {
                 redUnitCount--;
             }
-            Destroy(targetUnit);
+            targetUnit.SetActive(false);
         }
         else
         {
@@ -305,7 +372,7 @@ public class GameManager : MonoBehaviour
                     {
                         redUnitCount--;
                     }
-                    Destroy(selectedUnit);
+                    selectedUnit.SetActive(false);
                 }
             }
         }
@@ -480,11 +547,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddToInactiveList(GameObject g)
-    {
-        inactiveUnits.Add(g);
-    }
-
     public void IsUnitMoving()
     {
         if(updateGameState == GameState.MovingUnit)
@@ -506,6 +568,21 @@ public class GameManager : MonoBehaviour
     public void IncreaseRedUnitCount()
     {
         redUnitCount++;
+    }
+    public void AddToUnitList(GameObject u)
+    {
+        if(u.GetComponent<Unit>().teamColor == Team.Blue)
+        {
+            BlueUnitList.Add(u);
+        }
+        else if(u.GetComponent<Unit>().teamColor == Team.Red)
+        {
+            RedUnitList.Add(u);
+        }
+        else
+        {
+            Debug.LogError($"Unit {u.name} does not have a team color.");
+        }
     }
     public void GameOverCheck()
     {
