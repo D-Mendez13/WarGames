@@ -7,7 +7,7 @@ public class Unit : MonoBehaviour
     public UnitType unitType;
     public Team teamColor;
     public bool unitActive = true;
-    private Animator animator;
+    public Animator animator;
     private Transform unitPosition;
     private bool mouseOver = false;
     private GameManager gameManager;
@@ -36,7 +36,6 @@ public class Unit : MonoBehaviour
         unitPosition = GetComponent<Transform>();
 
         health = unitType.maxHealth;
-        gameManager.AddToUnitList(gameObject);
     }
 
     private void Update()
@@ -75,6 +74,7 @@ public class Unit : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = unitType.redInactiveImage;
         }
         GetComponent<SpriteRenderer>().color = gameManager.inactiveColor;
+        gameManager.AddToInactiveList(gameObject);
     }
 
     public void TakeDamage(int damage)

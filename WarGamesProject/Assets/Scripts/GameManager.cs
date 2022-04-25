@@ -8,8 +8,10 @@ public enum GameState
 {
     Menu,
     PlacingUnits,
+    StartingTurn,
     SelectingUnit,
     MovingUnit,
+    UnitWalking,
     UnitAction,
     SelectingTarget
 }
@@ -51,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     private GameObject selectedUnit;
     private Vector3 selectedUnitStartingPos;
+    private Vector3 movePoint;
+    private float moveSpeed = 5.0f;
     private Transform selectedUnitPosition;
     private GameObject targetUnit; //The unit that is being attack will be stored here.
     private Vector3Int location; //The location of the tile that was clicked by the player.
@@ -58,8 +62,7 @@ public class GameManager : MonoBehaviour
     private float apOffset = 1.0f;
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
-    private List<GameObject> blueUnits = new List<GameObject>();
-    private List<GameObject> redUnits = new List<GameObject>();
+    private List<GameObject> inactiveUnits = new List<GameObject>();
 
     void Start()
     {
@@ -77,6 +80,15 @@ public class GameManager : MonoBehaviour
         if (gameState == GameState.SelectingUnit || gameState == GameState.MovingUnit || gameState == GameState.SelectingTarget && highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
         {
             highlightMap.SetTile(location, dynamicTiles.highlightTile);
+        }
+
+        if(gameState == GameState.UnitWalking)
+        {
+            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x,movePoint.y,0f), moveSpeed * Time.deltaTime);
+            if(selectedUnitPosition.position == movePoint)
+            {
+                EnableActionPanel();
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -101,8 +113,10 @@ public class GameManager : MonoBehaviour
             {
                 if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.moveTile || dynamicTilemapTopLayer.GetTile<Tile>(location) == dynamicTiles.selectedUnitTile)
                 {
-                    selectedUnitPosition.position = new Vector2(location.x + unitOffset, location.y + unitOffset);
-                    EnableActionPanel();
+                    //selectedUnitPosition.position = new Vector2(location.x + unitOffset, location.y + unitOffset);
+                    movePoint = new Vector3(location.x + unitOffset, location.y+unitOffset, 0f);
+                    selectedUnit.GetComponent<Animator>().SetBool("walking", true);
+                    gameState = GameState.UnitWalking;
                 }
                 
             }
@@ -149,6 +163,7 @@ public class GameManager : MonoBehaviour
     {
         //move unit back to starting positoin
         selectedUnitPosition.position = selectedUnitStartingPos;
+        movePoint = selectedUnitPosition.position;
         dynamicTilemapTopLayer.ClearAllTiles();
         dynamicTilemapBottomLayer.ClearAllTiles();
         DisableActionPanel();
@@ -158,15 +173,16 @@ public class GameManager : MonoBehaviour
     //This section is the code for the action panel that pops up after a unit moves
     public void EnableActionPanel()
     {
-        if (tilemap.GetTile<Tile>(new Vector3Int((int)selectedUnitPosition.position.x - 1, (int)selectedUnitPosition.position.y, (int)selectedUnitPosition.position.z)) == null)
+        if (tilemap.GetTile<Tile>(new Vector3Int((int)movePoint.x - 1, (int)movePoint.y, (int)movePoint.z)) == null)
         {
-            actionPanel.GetComponent<Transform>().position = new Vector3(selectedUnitPosition.position.x + apOffset, selectedUnitPosition.position.y, selectedUnitPosition.position.z);
+            actionPanel.GetComponent<Transform>().position = new Vector3(movePoint.x + apOffset, movePoint.y, movePoint.z);
         }
         else
         {
-            actionPanel.GetComponent<Transform>().position = new Vector3(selectedUnitPosition.position.x - apOffset, selectedUnitPosition.position.y, selectedUnitPosition.position.z);
+            actionPanel.GetComponent<Transform>().position = new Vector3(movePoint.x - apOffset, movePoint.y, movePoint.z);
         }
         actionPanel.SetActive(true);
+        selectedUnit.GetComponent<Animator>().SetBool("walking", false);
         gameState = GameState.UnitAction;
     }
 
@@ -196,30 +212,35 @@ public class GameManager : MonoBehaviour
     {
         endTurnButton.SetActive(false);
 
-        if (currentTurn == Team.Blue)
+        if(inactiveUnits.Count > 0)
         {
-            for (int i = 0; i < blueUnits.Count; i++)
+            for(int i = 0; i < inactiveUnits.Count; i++)
             {
-                blueUnits[i].GetComponent<Unit>().UnitSetActive();
+                if(inactiveUnits[i] != null)
+                {
+                    inactiveUnits[i].GetComponent<Unit>().UnitSetActive();
+                }
             }
-            blueUnits.Clear();
+        }
+
+        if(currentTurn == Team.Blue)
+        {
             currentTurn = Team.Red;
         }
         else
         {
-            for (int i = 0; i < redUnits.Count; i++)
-            {
-                redUnits[i].GetComponent<Unit>().UnitSetActive();
-            }
-            redUnits.Clear();
             currentTurn = Team.Blue;
         }
+
+        inactiveUnits.Clear();
+        gameState=GameState.SelectingUnit;
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
     {
         selectedUnit = unit;
         selectedUnitStartingPos = startingPosition;
+        movePoint = startingPosition;
         selectedUnitPosition = selectedUnit.GetComponent<Transform>();
         Debug.Log($"Selected unit: {selectedUnit.name}");
     }
@@ -248,6 +269,10 @@ public class GameManager : MonoBehaviour
             if(defender.unitType.attackRange == attacker.unitType.attackRange)
             {
                 attacker.TakeDamage(defender.unitType.attack / 2 );
+                if(attacker.health <= 0)
+                {
+                    Destroy(selectedUnit);
+                }
             }
         }
     }
@@ -421,16 +446,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddToUnitList(GameObject g)
+    public void AddToInactiveList(GameObject g)
     {
-        if(g.GetComponent<Unit>().teamColor == Team.Blue)
-        {
-            blueUnits.Add(g);
-        }
-        else if(g.GetComponent<Unit>().teamColor == Team.Red)
-        {
-            redUnits.Add(g);
-        }
+        inactiveUnits.Add(g);
     }
 
     public void IsUnitMoving()

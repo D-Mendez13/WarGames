@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: Knight
   moveAmount: 2
   maxHealth: 30
-  attack: 9
+  attack: 13
   attackRange: 1
   blueInactiveImage: {fileID: 1790769706416786146, guid: d8ee06d50cbf3114b91d66fc9c5beeef, type: 3}
   redInactiveImage: {fileID: -1378749317270531471, guid: 2fc9821a3be70c24985a87cade301742, type: 3}
