@@ -81,6 +81,7 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.SelectingUnit;
         currentTurn = Team.Blue;
+        AIUnitIndex = 0;
     }
 
     private void Update()
@@ -98,11 +99,11 @@ public class GameManager : MonoBehaviour
         //Check input for player or AI
         if (enableBlueAI && currentTurn == Team.Blue)
         {
-            AIInput(BlueUnitList);
+            AI_Input(BlueUnitList);
         }
         else if(enableRedAI && currentTurn == Team.Red)
         {
-            AIInput(RedUnitList);
+            AI_Input(RedUnitList);
         }
         else
         {
@@ -134,13 +135,6 @@ public class GameManager : MonoBehaviour
                 {
                     SetTargetUnit(location);
                     Combat();
-                    if (selectedUnit != null)
-                    {
-                        selectedUnit.GetComponent<Unit>().UnitSetInactive();
-                    }
-                    gameState = GameState.SelectingUnit;
-                    dynamicTilemapBottomLayer.ClearAllTiles();
-                    dynamicTilemapTopLayer.ClearAllTiles();
                     GameOverCheck();
                 }
             }
@@ -203,22 +197,22 @@ public class GameManager : MonoBehaviour
      5. Move to a tile that is within attacking range to the targeted unit.
      6. Attack the target. Then return to step 2.
     */
-    void AIInput(List<GameObject> unitList)
+    void AI_Input(List<GameObject> unitList)
     {
-        if(gameState == GameState.SelectingUnit)
+        if (gameState == GameState.SelectingUnit)
         {
             if (unitList[AIUnitIndex] != null && unitList[AIUnitIndex].activeSelf)
             {
                 SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
                 FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
-                //TODO - Find Target
+                //TODO - Find a move target to move towards
                 gameState = GameState.MovingUnit;
             }
         }
 
         if(gameState == GameState.MovingUnit)
         {
-
+            //If there is a move target, move unit. Else, wait.
         }
 
         if(gameState == GameState.UnitWalking)
@@ -228,17 +222,12 @@ public class GameManager : MonoBehaviour
 
         if(gameState == GameState.UnitAction)
         {
-
+            //If there is a target, Select Target. Else, wait.
         }
 
-        if(gameState == GameState.SelectingTarget)
+        if (gameState == GameState.SelectingTarget)
         {
-
-        }
-
-        if(gameState == GameState.GameOver)
-        {
-
+            //If multiple targets, select one with the least amount of health && does the least amount of counter attack damage.
         }
         
     }
@@ -317,7 +306,7 @@ public class GameManager : MonoBehaviour
                 unit.GetComponent<Unit>().UnitSetActive();
             }
         }
-
+        AIUnitIndex = 0;
         gameState=GameState.SelectingUnit;
     }
 
@@ -376,6 +365,11 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        selectedUnit.GetComponent<Unit>().UnitSetInactive();
+        gameState = GameState.SelectingUnit;
+        dynamicTilemapBottomLayer.ClearAllTiles();
+        dynamicTilemapTopLayer.ClearAllTiles();
     }
 
     /*
