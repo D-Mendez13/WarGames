@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Tilemaps;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public enum GameState
 {
@@ -13,7 +15,8 @@ public enum GameState
     MovingUnit,
     UnitWalking,
     UnitAction,
-    SelectingTarget
+    SelectingTarget,
+    GameOver
 }
 
 public enum Team
@@ -32,9 +35,16 @@ public class GameManager : MonoBehaviour
     public Color activeColor = new Color(1, 1, 1, 1);
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
 
+    [Header("AI:")]
+    public bool enableAI = true;
+    public GameObject aiBrain;
+
     [Header("UI Objects:")]
     public GameObject actionPanel;
     public GameObject endTurnButton;
+    public GameObject blueWinsText;
+    public GameObject redWinsText;
+    public GameObject tieText;
 
     [Header("Tilemap Layers:")]
     public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
@@ -63,6 +73,8 @@ public class GameManager : MonoBehaviour
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
     private List<GameObject> inactiveUnits = new List<GameObject>();
+    private int blueUnitCount;
+    private int redUnitCount;
 
     void Start()
     {
@@ -82,7 +94,7 @@ public class GameManager : MonoBehaviour
             highlightMap.SetTile(location, dynamicTiles.highlightTile);
         }
 
-        if(gameState == GameState.UnitWalking)
+        if (gameState == GameState.UnitWalking)
         {
             selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x,movePoint.y,0f), moveSpeed * Time.deltaTime);
             if(selectedUnitPosition.position == movePoint)
@@ -93,6 +105,11 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (gameState == GameState.GameOver)
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
+
             if (gameState == GameState.SelectingTarget)
             {
                 if(dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.attackTile)
@@ -106,6 +123,7 @@ public class GameManager : MonoBehaviour
                     gameState = GameState.SelectingUnit;
                     dynamicTilemapBottomLayer.ClearAllTiles();
                     dynamicTilemapTopLayer.ClearAllTiles();
+                    GameOverCheck();
                 }
             }
 
@@ -154,11 +172,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
-
     void ReturnToSelectingUnit()
     {
         //move unit back to starting positoin
@@ -200,6 +213,11 @@ public class GameManager : MonoBehaviour
 
     public void WaitButton()
     {
+        if(selectedUnitStartingPos == selectedUnitPosition.position)
+        {
+            //Heal for waiting in the same spot
+            selectedUnit.GetComponent<Unit>().Heal();
+        }
         selectedUnit.GetComponent<Unit>().UnitSetInactive();
         DisableActionPanel();
         dynamicTilemapTopLayer.ClearAllTiles();
@@ -262,6 +280,14 @@ public class GameManager : MonoBehaviour
         defender.TakeDamage(attacker.unitType.attack);
         if(defender.health <= 0)
         {
+            if(targetUnit.GetComponent<Unit>().teamColor == Team.Blue)
+            {
+                blueUnitCount--;
+            }
+            else
+            {
+                redUnitCount--;
+            }
             Destroy(targetUnit);
         }
         else
@@ -271,6 +297,14 @@ public class GameManager : MonoBehaviour
                 attacker.TakeDamage(defender.unitType.attack / 2 );
                 if(attacker.health <= 0)
                 {
+                    if (selectedUnit.GetComponent<Unit>().teamColor == Team.Blue)
+                    {
+                        blueUnitCount--;
+                    }
+                    else
+                    {
+                        redUnitCount--;
+                    }
                     Destroy(selectedUnit);
                 }
             }
@@ -463,5 +497,35 @@ public class GameManager : MonoBehaviour
     public void SetUnitMoving()
     {
         updateGameState = GameState.MovingUnit;
+    }
+
+    public void IncreaseBlueUnitCount()
+    {
+        blueUnitCount++;
+    }
+    public void IncreaseRedUnitCount()
+    {
+        redUnitCount++;
+    }
+    public void GameOverCheck()
+    {
+        if(blueUnitCount <= 0 || redUnitCount <= 0)
+        {
+            gameState = GameState.GameOver;
+            if (blueUnitCount <= 0 && redUnitCount <= 0)
+            {
+                tieText.SetActive(true);
+            }
+            else if (blueUnitCount <= 0)
+            {
+                //Red Wins
+                redWinsText.SetActive(true);
+            }
+            else if (redUnitCount <= 0)
+            {
+                //Blue Wins
+                blueWinsText.SetActive(true);
+            }
+        }
     }
 }

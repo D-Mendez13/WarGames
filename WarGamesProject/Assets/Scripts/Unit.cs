@@ -30,10 +30,19 @@ public class Unit : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         if(gameManager == null)
         {
-            Debug.LogError("Could not find the Game Manager for the scene");
+            Debug.LogError("Unit: Could not find the Game Manager in the scene");
         }
         animator = GetComponent<Animator>();
         unitPosition = GetComponent<Transform>();
+
+        if(teamColor == Team.Blue)
+        {
+            gameManager.IncreaseBlueUnitCount();
+        }
+        else if(teamColor == Team.Red)
+        {
+            gameManager.IncreaseRedUnitCount();
+        }
 
         health = unitType.maxHealth;
     }
@@ -81,5 +90,15 @@ public class Unit : MonoBehaviour
     {
         health -= damage;
         healthBarUI.SetActive(true);
+    }
+
+    public void Heal()
+    {
+        health += unitType.maxHealth / 4;
+        if(health > unitType.maxHealth)
+        {
+            health = unitType.maxHealth;
+            healthBarUI.SetActive(false);
+        }
     }
 }
