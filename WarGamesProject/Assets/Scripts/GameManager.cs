@@ -232,12 +232,27 @@ public class GameManager : MonoBehaviour
         if (gameState == GameState.UnitAction)
         {
             //If there is a target, Select Target. Else, wait.
-            WaitButton();
+            if(targetUnit != null)
+            {
+                AttackButton();
+            }
+            else
+            {
+                WaitButton();
+            }
         }
 
         if (gameState == GameState.SelectingTarget)
         {
             //If multiple targets, select one with the least amount of health && does the least amount of counter attack damage.
+            if(targetUnit != null)
+            {
+                Combat();
+            }
+            else
+            {
+                WaitButton();
+            }
         }
 
     }
@@ -495,10 +510,12 @@ public class GameManager : MonoBehaviour
                     if(UnitOnTile(nextTilePosition) && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                        SetTargetUnit(nextTilePosition);
                     }
                     else
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
+                        targetUnit = null;
                     }
                     
                 }
