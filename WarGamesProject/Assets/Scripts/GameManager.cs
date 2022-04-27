@@ -97,15 +97,6 @@ public class GameManager : MonoBehaviour
             highlightMap.SetTile(location, dynamicTiles.highlightTile);
         }
 
-        if (gameState == GameState.UnitWalking)
-        {
-            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x, movePoint.y, 0f), moveSpeed * Time.deltaTime);
-            if (selectedUnitPosition.position == movePoint)
-            {
-                EnableActionPanel();
-            }
-        }
-
         //Check input for player or AI
         if (enableBlueAI && currentTurn == Team.Blue)
         {
@@ -118,6 +109,15 @@ public class GameManager : MonoBehaviour
         else
         {
             PlayerInput(location);
+        }
+
+        if (gameState == GameState.UnitWalking)
+        {
+            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x, movePoint.y, 0f), moveSpeed * Time.deltaTime);
+            if (selectedUnitPosition.position == movePoint)
+            {
+                EnableActionPanel();
+            }
         }
     }
 
@@ -229,7 +229,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if(gameState == GameState.UnitAction)
+        if (gameState == GameState.UnitAction)
         {
             //If there is a target, Select Target. Else, wait.
             WaitButton();
@@ -239,7 +239,7 @@ public class GameManager : MonoBehaviour
         {
             //If multiple targets, select one with the least amount of health && does the least amount of counter attack damage.
         }
-        
+
     }
 
     void ReturnToSelectingUnit()
@@ -279,6 +279,7 @@ public class GameManager : MonoBehaviour
         DisableActionPanel();
         FindAttackableTiles(selectedUnit.GetComponent<Unit>().unitType, selectedUnitPosition.position);
         gameState = GameState.SelectingTarget;
+        Debug.Log("Attack Button Clicked");
     }
 
     public void WaitButton()
@@ -293,6 +294,7 @@ public class GameManager : MonoBehaviour
         dynamicTilemapTopLayer.ClearAllTiles();
         dynamicTilemapBottomLayer.ClearAllTiles();
         gameState = GameState.SelectingUnit;
+        Debug.Log("Wait Button Clicked");
     }
     //----------------------------------------------------------------------------------------
 
@@ -307,7 +309,7 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
-            SetSelectedUnit(RedUnitList[0], RedUnitList[0].GetComponent<Transform>().position);
+            //SetSelectedUnit(RedUnitList[0], RedUnitList[0].GetComponent<Transform>().position);
         }
         else
         {
@@ -316,10 +318,12 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
-            SetSelectedUnit(BlueUnitList[0], BlueUnitList[0].GetComponent<Transform>().position);
+            //SetSelectedUnit(BlueUnitList[0], BlueUnitList[0].GetComponent<Transform>().position);
         }
+        IsUnitMoving();
         gameState = GameState.SelectingUnit;
         AIUnitIndex = 0;
+        Debug.Log("End Button Clicked");
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
@@ -328,6 +332,7 @@ public class GameManager : MonoBehaviour
         selectedUnitStartingPos = startingPosition;
         movePoint = startingPosition;
         selectedUnitPosition = selectedUnit.GetComponent<Transform>();
+        Debug.Log($"Unit Index: {AIUnitIndex}");
         Debug.Log($"Selected unit: {selectedUnit.name}");
     }
 
@@ -554,6 +559,7 @@ public class GameManager : MonoBehaviour
         movePoint = new Vector3(tilePosition.x + unitOffset, tilePosition.y + unitOffset, 0f);
         selectedUnit.GetComponent<Animator>().SetBool("walking", true);
         gameState = GameState.UnitWalking;
+        Debug.Log("Moving the selected unit...");
     }
 
     /*
