@@ -9,7 +9,7 @@ using TMPro;
 public enum GameState
 {
     Menu,
-    PlacingUnits,
+    StartingTurn,
     SelectingUnit,
     MovingUnit,
     UnitWalking,
@@ -73,7 +73,8 @@ public class GameManager : MonoBehaviour
     private int[] posY = { 0, 1, -1, 0 };
     private int blueUnitCount;
     private int redUnitCount;
-    private int AIUnitIndex;
+    private int AIUnitIndex; //Index used to have the AI go through it's own list of active units to give commands.
+    private List<GameObject> PotentialTargets = new List<GameObject>(); //A list of enemy units in range for the AI.
     private List<GameObject> BlueUnitList = new List<GameObject>();
     private List<GameObject> RedUnitList = new List<GameObject>();
 
@@ -96,6 +97,15 @@ public class GameManager : MonoBehaviour
             highlightMap.SetTile(location, dynamicTiles.highlightTile);
         }
 
+        if (gameState == GameState.UnitWalking)
+        {
+            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x, movePoint.y, 0f), moveSpeed * Time.deltaTime);
+            if (selectedUnitPosition.position == movePoint)
+            {
+                EnableActionPanel();
+            }
+        }
+
         //Check input for player or AI
         if (enableBlueAI && currentTurn == Team.Blue)
         {
@@ -113,15 +123,6 @@ public class GameManager : MonoBehaviour
 
     void PlayerInput(Vector3Int location)
     {
-        if (gameState == GameState.UnitWalking)
-        {
-            selectedUnitPosition.position = Vector3.MoveTowards(selectedUnitPosition.position, new Vector3(movePoint.x, movePoint.y, 0f), moveSpeed * Time.deltaTime);
-            if (selectedUnitPosition.position == movePoint)
-            {
-                EnableActionPanel();
-            }
-        }
-
         if (Input.GetMouseButtonDown(0))
         {
             if (gameState == GameState.GameOver)
@@ -144,9 +145,7 @@ public class GameManager : MonoBehaviour
                 if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.moveTile || dynamicTilemapTopLayer.GetTile<Tile>(location) == dynamicTiles.selectedUnitTile)
                 {
                     //selectedUnitPosition.position = new Vector2(location.x + unitOffset, location.y + unitOffset);
-                    movePoint = new Vector3(location.x + unitOffset, location.y + unitOffset, 0f);
-                    selectedUnit.GetComponent<Animator>().SetBool("walking", true);
-                    gameState = GameState.UnitWalking;
+                    MoveUnitToTile(location);
                 }
 
             }
@@ -163,7 +162,7 @@ public class GameManager : MonoBehaviour
                     endTurnButton.SetActive(false);
                     gameState = GameState.SelectingUnit;
                     break;
-                case GameState.PlacingUnits:
+                case GameState.StartingTurn:
                     break;
                 case GameState.SelectingUnit:
                     endTurnButton.SetActive(true);
@@ -201,28 +200,39 @@ public class GameManager : MonoBehaviour
     {
         if (gameState == GameState.SelectingUnit)
         {
-            if (unitList[AIUnitIndex] != null && unitList[AIUnitIndex].activeSelf)
+            if (AIUnitIndex < unitList.Count && unitList[AIUnitIndex].GetComponent<Unit>().unitActive && unitList[AIUnitIndex].activeSelf)
             {
                 SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
+                PotentialTargets.Clear();
+                EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount * 2, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                SelectTarget();
                 FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
-                //TODO - Find a move target to move towards
                 gameState = GameState.MovingUnit;
+                AIUnitIndex++;
+            }
+            else
+            {
+                EndTurnButton();
             }
         }
 
         if(gameState == GameState.MovingUnit)
         {
             //If there is a move target, move unit. Else, wait.
-        }
-
-        if(gameState == GameState.UnitWalking)
-        {
-
+            if(targetUnit != null)
+            {
+                MoveUnitToTile(movePoint);
+            }
+            else
+            {
+                WaitButton();
+            }
         }
 
         if(gameState == GameState.UnitAction)
         {
             //If there is a target, Select Target. Else, wait.
+            WaitButton();
         }
 
         if (gameState == GameState.SelectingTarget)
@@ -282,7 +292,7 @@ public class GameManager : MonoBehaviour
         DisableActionPanel();
         dynamicTilemapTopLayer.ClearAllTiles();
         dynamicTilemapBottomLayer.ClearAllTiles();
-        gameState=GameState.SelectingUnit;
+        gameState = GameState.SelectingUnit;
     }
     //----------------------------------------------------------------------------------------
 
@@ -297,6 +307,7 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
+            SetSelectedUnit(RedUnitList[0], RedUnitList[0].GetComponent<Transform>().position);
         }
         else
         {
@@ -305,9 +316,10 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
+            SetSelectedUnit(BlueUnitList[0], BlueUnitList[0].GetComponent<Transform>().position);
         }
+        gameState = GameState.SelectingUnit;
         AIUnitIndex = 0;
-        gameState=GameState.SelectingUnit;
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
@@ -380,7 +392,8 @@ public class GameManager : MonoBehaviour
     {
         dynamicTilemapBottomLayer.ClearAllTiles();
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
-        HighlightMovableTiles(startPos, unit, unit.moveAmount);
+        movePoint = unitPosition;
+        HighlightMovableTiles(startPos, unit, unit.moveAmount, unit.attackRange);
 
         dynamicTilemapTopLayer.SetTile(startPos, dynamicTiles.selectedUnitTile);
         SetUnitMoving();
@@ -390,30 +403,61 @@ public class GameManager : MonoBehaviour
      * This will check the four adjacent tiles to see if the unit can move on it.
      * If it CAN, it will set a moveTile on that position for the player to later click on.
      */
-    void HighlightMovableTiles(Vector3Int currentTilePosition, UnitType unit, int remaningMoves)
+    void HighlightMovableTiles(Vector3Int currentTilePosition, UnitType unit, int remaningMoves, int remaningAttackRange)
     {
         for (int x = 0; x < posX.Length; x++)
         {
             Vector3Int nextTilePosition = new Vector3Int(currentTilePosition.x + posX[x], currentTilePosition.y + posY[x], currentTilePosition.z);
-            if (tilemap.GetTile<Tile>(nextTilePosition) != null && CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
+            if (tilemap.GetTile<Tile>(nextTilePosition) != null)
             {
-                if (UnitOnTile(nextTilePosition))
+                if(CanMove(remaningMoves, GetTileType(nextTilePosition), unit))
                 {
-                    dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
-                }
-                else
-                {
-                    dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.moveTile);
-                }
+                    if (UnitOnTile(nextTilePosition))
+                    {
+                        if (UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
+                        {
+                            dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                        }
+                        else
+                        {
+                            dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
+                        }
+                    }
+                    else
+                    {
+                        dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.moveTile);
+                        //For the AI
+                        if(targetUnit != null)
+                        {
+                            float dist = Vector3.Distance(nextTilePosition, targetUnit.GetComponent<Transform>().position);
+                            if(dist < Vector3.Distance(movePoint, targetUnit.GetComponent<Transform>().position))
+                            {
+                                movePoint = nextTilePosition;
+                            }
+                        }
+                    }
 
-                if(dynamicTilemapBottomLayer.GetTile<Tile>(nextTilePosition) == dynamicTiles.occupiedMoveTile && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
-                {
-                    //If enemy is detected on the checked tile, pass in 0 to remaning moves for the next function call so unit can not pass through enemies.
-                    HighlightMovableTiles(nextTilePosition, unit, 0);
+                    if (dynamicTilemapBottomLayer.GetTile<Tile>(nextTilePosition) == dynamicTiles.attackTile)
+                    {
+                        //If enemy is detected on the checked tile, pass in 0 to remaning moves for the next function call so unit can not pass through enemies.
+                        HighlightMovableTiles(nextTilePosition, unit, 0, remaningAttackRange - 1);
+                    }
+                    else
+                    {
+                        HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost, unit.attackRange);
+                    }
                 }
                 else
                 {
-                    HighlightMovableTiles(nextTilePosition, unit, remaningMoves - GetTileType(nextTilePosition).moveCost);
+                    //If they can't move anymore, that means it's time to highlight attackable tiles in red.
+                    if(dynamicTilemapBottomLayer.GetTile<Tile>(nextTilePosition) == null && remaningAttackRange > 0)
+                    {
+                        if(GetTileType(nextTilePosition) != rockTile && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
+                        {
+                            dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                        }
+                        HighlightMovableTiles(nextTilePosition, unit, 0, remaningAttackRange - 1);
+                    }
                 }
             }
         }
@@ -458,6 +502,61 @@ public class GameManager : MonoBehaviour
     }
 
     /*
+     * Will check twice the unit's move distance for enemy units.
+     * This will add any enemy units it finds to the PotentialTarget list.
+     */
+
+    void EnemyRadar(int RemaningMoves, Vector3Int currentPosition)
+    {
+        for (int i = 0; i < posX.Length; i++)
+        {
+            Vector3Int nextTilePosition = new Vector3Int(currentPosition.x + posX[i], currentPosition.y + posY[i], currentPosition.z);
+            if (UnitOnTile(nextTilePosition) && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
+            {
+                PotentialTargets.Add(GetUnitOnTile(nextTilePosition));
+            }
+            if(RemaningMoves > 0)
+            {
+                EnemyRadar(RemaningMoves - 1, nextTilePosition);
+            }
+        }
+    }
+
+    //Selects a target from the potential target list for the AI.
+    void SelectTarget()
+    {
+        if(PotentialTargets.Count > 0)
+        {
+            targetUnit = PotentialTargets[0];
+            //Compare each target to find a good one to select.
+            if (PotentialTargets.Count > 1)
+            {
+                for (int i = 1; i < PotentialTargets.Count; i++)
+                {
+                    //Check for the least amount of health
+                    if(PotentialTargets[i].GetComponent<Unit>().health < targetUnit.GetComponent<Unit>().health)
+                    {
+                        targetUnit = PotentialTargets[i];
+                    }
+
+                }
+            }
+        }
+        else
+        {
+            targetUnit = null;
+        }
+    }
+
+    //Finds the closest tile for the AI to move their unit to their target.
+    void MoveUnitToTile(Vector3 tilePosition)
+    {
+        movePoint = new Vector3(tilePosition.x + unitOffset, tilePosition.y + unitOffset, 0f);
+        selectedUnit.GetComponent<Animator>().SetBool("walking", true);
+        gameState = GameState.UnitWalking;
+    }
+
+    /*
      * Returns true if the player has enough move points to move on that tile.
      * It will first check if the blockCavalry flag is active in that TileType
      */
@@ -495,6 +594,12 @@ public class GameManager : MonoBehaviour
         {
             return false;
         }
+    }
+
+    GameObject GetUnitOnTile(Vector3Int position)
+    {
+        Collider2D unit = Physics2D.OverlapBox(new Vector2(position.x + unitOffset, position.y + unitOffset), new Vector2(0.1f, 0.1f), 0.0f);
+        return unit.gameObject;
     }
 
     Team UnitTeamColor(Vector3Int position)
