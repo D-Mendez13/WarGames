@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Archer
   m_EditorClassIdentifier: 
   unitName: Archer
-  moveAmount: 3
+  moveAmount: 2
   maxHealth: 20
   attack: 9
   attackRange: 2
