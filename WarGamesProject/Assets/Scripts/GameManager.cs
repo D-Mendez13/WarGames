@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
     public TileType grassTile;
     public TileType rockTile;
     public TileType forestTile;
+    public TileType lavaTile;
 
     private GameObject selectedUnit;
     private Vector3 selectedUnitStartingPos;
@@ -95,6 +96,35 @@ public class GameManager : MonoBehaviour
         if (gameState == GameState.SelectingUnit || gameState == GameState.MovingUnit || gameState == GameState.SelectingTarget && highlightMap.GetTile(location) == null && tilemap.GetTile(location) != null)
         {
             highlightMap.SetTile(location, dynamicTiles.highlightTile);
+        }
+
+        if(gameState == GameState.StartingTurn)
+        {
+            if(currentTurn == Team.Blue)
+            {
+                for(int i = 0; i < BlueUnitList.Count; i++)
+                {
+                    Vector3 uniPos = BlueUnitList[i].GetComponent<Transform>().position;
+                    Vector3Int unitPos2 = new Vector3Int((int)uniPos.x, (int)uniPos.y, (int)uniPos.z);
+                    if (GetTileType(unitPos2) == lavaTile)
+                    {
+                        BlueUnitList[i].GetComponent<Unit>().TakeDamage(5);
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < RedUnitList.Count; i++)
+                {
+                    Vector3 uniPos = RedUnitList[i].GetComponent<Transform>().position;
+                    Vector3Int unitPos2 = new Vector3Int((int)uniPos.x, (int)uniPos.y, (int)uniPos.z);
+                    if (GetTileType(unitPos2) == lavaTile)
+                    {
+                        RedUnitList[i].GetComponent<Unit>().TakeDamage(5);
+                    }
+                }
+            }
+            gameState = GameState.SelectingUnit;
         }
 
         //Check input for player or AI
@@ -324,7 +354,6 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
-            //SetSelectedUnit(RedUnitList[0], RedUnitList[0].GetComponent<Transform>().position);
         }
         else
         {
@@ -333,10 +362,9 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
-            //SetSelectedUnit(BlueUnitList[0], BlueUnitList[0].GetComponent<Transform>().position);
         }
         IsUnitMoving();
-        gameState = GameState.SelectingUnit;
+        gameState = GameState.StartingTurn;
         AIUnitIndex = 0;
         Debug.Log("End Button Clicked");
     }
@@ -662,6 +690,10 @@ public class GameManager : MonoBehaviour
         else if (tilemap.GetTile<Tile>(position) == rockTile.tile)
         {
             return rockTile;
+        }
+        else if (tilemap.GetTile<Tile>(position) == lavaTile.tile)
+        {
+            return lavaTile;
         }
         else
         {

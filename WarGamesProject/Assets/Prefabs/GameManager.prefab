@@ -3209,6 +3209,7 @@ MonoBehaviour:
   grassTile: {fileID: 11400000, guid: d8c4b926212d919419db8f2c389fc219, type: 2}
   rockTile: {fileID: 11400000, guid: 5941cd42e5ef87346b15954b57ae9038, type: 2}
   forestTile: {fileID: 11400000, guid: 1caf854193087c648ae2cbc260f687d2, type: 2}
+  lavaTile: {fileID: 11400000, guid: 1a6e522938219f44ca50d74aa57fbabc, type: 2}
 --- !u!1 &7665176399500608323
 GameObject:
   m_ObjectHideFlags: 0
