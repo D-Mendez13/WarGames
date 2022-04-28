@@ -3295,6 +3295,10 @@ PrefabInstance:
       propertyPath: m_Tiles.Array.data[151].second.m_TileSpriteIndex
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 7665176398990198335, guid: 61133c9a271c6494caad9e2b0505d62a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7665176399373652924, guid: 61133c9a271c6494caad9e2b0505d62a, type: 3}
       propertyPath: m_Name
       value: GameManager
