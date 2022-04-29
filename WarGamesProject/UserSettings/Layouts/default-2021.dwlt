@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 1037
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -73,7 +73,7 @@ MonoBehaviour:
     height: 30
   m_MinSize: {x: 0, y: 0}
   m_MaxSize: {x: 0, y: 0}
-  m_LastLoadedLayoutName: Tall
+  m_LastLoadedLayoutName: 
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -120,7 +120,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 18142
+  controlID: 101
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 200}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 18102
+  controlID: 29
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -244,8 +244,8 @@ MonoBehaviour:
     y: 0
     width: 465
     height: 987
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 15}
   m_Panes:
   - {fileID: 15}
@@ -590,9 +590,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -5.0660133, y: -2.6287978, z: -0.05410679}
+    m_Target: {x: 7.7864566, y: 4.6058974, z: 0.37044835}
     speed: 2
-    m_Value: {x: -4.554272, y: -2.4577036, z: -0.046862394}
+    m_Value: {x: 7.7864566, y: 4.6058974, z: 0.37044835}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -643,9 +643,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 16.823414
+    m_Target: 8.053192
     speed: 2
-    m_Value: 16.09896
+    m_Value: 8.053192
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -703,7 +703,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: aad5feffd8dcfeff48ddfeff08e0feff9ce4feff0ce5feff02e8feff86f0fefff6f0feffa8f2feff16f6feffdcf9feff4cfafeff42fdfeff8208fffff208ffff100bffff5419ffffc419ffff181cffff7020ffff1c2bffff582bffff4e2effff1a37ffff7e40ffffee40ffffa042fffffc46ffff1a4cffff1c4ffffff853ffff6854ffff5e57ffff085bffffd862ffff9865ffff1469ffff406effff6273ffffec75ffff0478ffffd87cffff608affffbc8dffff0694ffff6297ffff789bffff84a0ffffc4abffff32b1ffff50c0ffff2ac1ffff62c8ffffe6f7ffff62f9ffff8e6d0100ac6d01007a6e0100
+      m_ExpandedIDs: beecffff2eedffff3eeeffff68f1ffffd8f1ffff04f5ffff76f9ffff2cfbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -768,22 +768,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Images/MapLayout
+    - Assets/Scriptable Objects/UnitTypes
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Images/MapLayout
+  - Assets/Scriptable Objects/UnitTypes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\dmmen\Desktop\MyPrograms\Unity Games\WarGames\WarGamesProject
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 2e530000
-    m_LastClickedID: 21294
-    m_ExpandedIDs: 000000000e53000010530000125300001453000016530000185300001a5300001c5300001e53000020530000225300002453000026530000
+    m_SelectedIDs: 4a530000
+    m_LastClickedID: 21322
+    m_ExpandedIDs: 000000001453000016530000185300001a5300001c5300001e53000020530000225300002453000026530000285300002a5300002c530000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -811,7 +811,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000000e53000010530000125300001453000016530000185300001a5300001c5300001e53000020530000225300002453000026530000
+    m_ExpandedIDs: 000000001453000016530000185300001a5300001c5300001e53000020530000225300002453000026530000285300002a5300002c530000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
