@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileName: Lava
   moveCost: 2
-  blockCavalry: 1
+  blockCavalry: 0
   tile: {fileID: 11400000, guid: 0bd1687f54484ed4e9f322998b8e63a4, type: 2}
