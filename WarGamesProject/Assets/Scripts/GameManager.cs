@@ -72,9 +72,12 @@ public class GameManager : MonoBehaviour
     private float apOffset = 1.0f;
     private int[] posX = { -1, 0, 0, 1 };
     private int[] posY = { 0, 1, -1, 0 };
+    private int[] posX_2 = { -2, 0, 0, 2 };
+    private int[] posY_2 = { 0, 2, -2, 0 };
     private int blueUnitCount;
     private int redUnitCount;
     private int AIUnitIndex; //Index used to have the AI go through it's own list of active units to give commands.
+    private bool AI_InRange;
     private List<GameObject> PotentialTargets = new List<GameObject>(); //A list of enemy units in range for the AI.
     private List<GameObject> BlueUnitList = new List<GameObject>();
     private List<GameObject> RedUnitList = new List<GameObject>();
@@ -234,9 +237,21 @@ public class GameManager : MonoBehaviour
             {
                 SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
                 PotentialTargets.Clear();
-                EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount * 2, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
                 SelectTarget();
-                FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
+                if(targetUnit != null)
+                {
+                    FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
+                }
+                else
+                {
+                    EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount * 2, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                    SelectTarget();
+                    if(targetUnit != null)
+                    {
+                        FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
+                    }
+                }
                 gameState = GameState.MovingUnit;
                 AIUnitIndex++;
             }
@@ -251,7 +266,14 @@ public class GameManager : MonoBehaviour
             //If there is a move target, move unit. Else, wait.
             if(targetUnit != null)
             {
-                MoveUnitToTile(movePoint);
+                if(movePoint == selectedUnit.GetComponent<Transform>().position)
+                {
+                    WaitButton();
+                }
+                else
+                {
+                    MoveUnitToTile(movePoint);
+                }
             }
             else
             {
@@ -277,7 +299,15 @@ public class GameManager : MonoBehaviour
             //If multiple targets, select one with the least amount of health && does the least amount of counter attack damage.
             if(targetUnit != null)
             {
-                Combat();
+                if (AI_InRange)
+                {
+                    Combat();
+                    AI_InRange = false;
+                }
+                else
+                {
+                    WaitButton();
+                }
             }
             else
             {
@@ -339,12 +369,14 @@ public class GameManager : MonoBehaviour
         dynamicTilemapTopLayer.ClearAllTiles();
         dynamicTilemapBottomLayer.ClearAllTiles();
         gameState = GameState.SelectingUnit;
+        targetUnit = null;
         Debug.Log("Wait Button Clicked");
     }
     //----------------------------------------------------------------------------------------
 
     public void EndTurnButton()
     {
+        Debug.Log("End Button Clicked");
         endTurnButton.SetActive(false);
 
         if(currentTurn == Team.Blue)
@@ -354,6 +386,7 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
+            Debug.Log("Red Turn");
         }
         else
         {
@@ -362,11 +395,11 @@ public class GameManager : MonoBehaviour
             {
                 unit.GetComponent<Unit>().UnitSetActive();
             }
+            Debug.Log("Blue Turn");
         }
         IsUnitMoving();
         gameState = GameState.StartingTurn;
         AIUnitIndex = 0;
-        Debug.Log("End Button Clicked");
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
@@ -428,6 +461,7 @@ public class GameManager : MonoBehaviour
 
         selectedUnit.GetComponent<Unit>().UnitSetInactive();
         gameState = GameState.SelectingUnit;
+        targetUnit = null;
         dynamicTilemapBottomLayer.ClearAllTiles();
         dynamicTilemapTopLayer.ClearAllTiles();
     }
@@ -465,6 +499,34 @@ public class GameManager : MonoBehaviour
                         if (UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
                         {
                             dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                            //For the AI
+                            if (targetUnit != null)
+                            {
+                                if(selectedUnit.GetComponent<Unit>().unitType.attackRange == 1)
+                                {
+                                    //Attack range of 1
+                                    for(int y = 0; y < posY.Length; y++)
+                                    {
+                                        Vector3Int adjacentTilePos = new Vector3Int(nextTilePosition.x + posX[y], nextTilePosition.y + posY[y], nextTilePosition.z);
+                                        if(dynamicTilemapBottomLayer.GetTile<Tile>(adjacentTilePos) == dynamicTiles.moveTile)
+                                        {
+                                            movePoint = adjacentTilePos;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    //Attack range of 2
+                                    for (int y = 0; y < posY_2.Length; y++)
+                                    {
+                                        Vector3Int adjacentTilePos = new Vector3Int(nextTilePosition.x + posX_2[y], nextTilePosition.y + posY_2[y], nextTilePosition.z);
+                                        if (dynamicTilemapBottomLayer.GetTile<Tile>(adjacentTilePos) == dynamicTiles.moveTile)
+                                        {
+                                            movePoint = adjacentTilePos;
+                                        }
+                                    }
+                                }
+                            }
                         }
                         else
                         {
@@ -474,11 +536,10 @@ public class GameManager : MonoBehaviour
                     else
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.moveTile);
-                        //For the AI
-                        if(targetUnit != null)
+                        if (targetUnit != null)
                         {
-                            float dist = Vector3.Distance(nextTilePosition, targetUnit.GetComponent<Transform>().position);
-                            if(dist < Vector3.Distance(movePoint, targetUnit.GetComponent<Transform>().position))
+                            float dist = Vector3.Distance(nextTilePosition, targetUnit.transform.position);
+                            if(dist < Vector3.Distance(movePoint, targetUnit.transform.position))
                             {
                                 movePoint = nextTilePosition;
                             }
@@ -538,12 +599,12 @@ public class GameManager : MonoBehaviour
                     if(UnitOnTile(nextTilePosition) && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
-                        SetTargetUnit(nextTilePosition);
+                        AI_InRange = true;
+                        //Potental Target
                     }
                     else
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.occupiedMoveTile);
-                        targetUnit = null;
                     }
                     
                 }
