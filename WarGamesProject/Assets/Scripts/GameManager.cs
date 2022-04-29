@@ -255,7 +255,8 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount * 2, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                    PotentialTargets.Clear();
+                    EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount + 4, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
                     SelectTarget();
                     if(targetUnit != null)
                     {
@@ -278,7 +279,7 @@ public class GameManager : MonoBehaviour
             {
                 if(movePoint == selectedUnit.GetComponent<Transform>().position)
                 {
-                    WaitButton();
+                    gameState = GameState.UnitAction;
                 }
                 else
                 {
