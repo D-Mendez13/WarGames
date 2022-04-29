@@ -233,8 +233,18 @@ public class GameManager : MonoBehaviour
     {
         if (gameState == GameState.SelectingUnit)
         {
-            if (AIUnitIndex < unitList.Count && unitList[AIUnitIndex].GetComponent<Unit>().unitActive && unitList[AIUnitIndex].activeSelf)
+            if (AIUnitIndex < unitList.Count)
             {
+                while(unitList[AIUnitIndex].activeSelf == false)
+                {
+                    AIUnitIndex++;
+                    if(AIUnitIndex >= unitList.Count)
+                    {
+                        EndTurnButton();
+                        return;
+                    }
+                }
+
                 SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
                 PotentialTargets.Clear();
                 EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
@@ -277,7 +287,7 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                WaitButton();
+                gameState = GameState.UnitAction;
             }
         }
 
@@ -600,6 +610,7 @@ public class GameManager : MonoBehaviour
                     if(UnitOnTile(nextTilePosition) && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
+                        targetUnit = GetUnitOnTile(nextTilePosition);
                         AI_InRange = true;
                         //Potental Target
                     }
