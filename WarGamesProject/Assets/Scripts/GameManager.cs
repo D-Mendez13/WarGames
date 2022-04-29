@@ -131,18 +131,28 @@ public class GameManager : MonoBehaviour
             gameState = GameState.SelectingUnit;
         }
 
-        //Check input for player or AI
-        if (enableBlueAI && currentTurn == Team.Blue && gameState != GameState.GameOver)
+        if(gameState == GameState.GameOver)
         {
-            AI_Input(BlueUnitList);
-        }
-        else if(enableRedAI && currentTurn == Team.Red && gameState != GameState.GameOver)
-        {
-            AI_Input(RedUnitList);
+            if (Input.GetMouseButtonDown(0))
+            {
+                SceneManager.LoadScene("MainMenu");
+            }
         }
         else
         {
-            PlayerInput(location);
+            //Check input for player or AI
+            if (enableBlueAI && currentTurn == Team.Blue && gameState != GameState.GameOver)
+            {
+                AI_Input(BlueUnitList);
+            }
+            else if (enableRedAI && currentTurn == Team.Red && gameState != GameState.GameOver)
+            {
+                AI_Input(RedUnitList);
+            }
+            else
+            {
+                PlayerInput(location);
+            }
         }
 
         if (gameState == GameState.UnitWalking)
@@ -159,11 +169,6 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (gameState == GameState.GameOver)
-            {
-                SceneManager.LoadScene("MainMenu");
-            }
-
             if (gameState == GameState.SelectingTarget)
             {
                 if (dynamicTilemapBottomLayer.GetTile<Tile>(location) == dynamicTiles.attackTile)
