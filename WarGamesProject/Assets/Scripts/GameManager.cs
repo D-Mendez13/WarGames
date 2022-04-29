@@ -127,15 +127,16 @@ public class GameManager : MonoBehaviour
                     }
                 }
             }
+            AIUnitIndex = 0;
             gameState = GameState.SelectingUnit;
         }
 
         //Check input for player or AI
-        if (enableBlueAI && currentTurn == Team.Blue)
+        if (enableBlueAI && currentTurn == Team.Blue && gameState != GameState.GameOver)
         {
             AI_Input(BlueUnitList);
         }
-        else if(enableRedAI && currentTurn == Team.Red)
+        else if(enableRedAI && currentTurn == Team.Red && gameState != GameState.GameOver)
         {
             AI_Input(RedUnitList);
         }
@@ -169,7 +170,6 @@ public class GameManager : MonoBehaviour
                 {
                     SetTargetUnit(location);
                     Combat();
-                    GameOverCheck();
                 }
             }
 
@@ -464,6 +464,7 @@ public class GameManager : MonoBehaviour
         targetUnit = null;
         dynamicTilemapBottomLayer.ClearAllTiles();
         dynamicTilemapTopLayer.ClearAllTiles();
+        GameOverCheck();
     }
 
     /*
@@ -803,7 +804,6 @@ public class GameManager : MonoBehaviour
     {
         if(blueUnitCount <= 0 || redUnitCount <= 0)
         {
-            gameState = GameState.GameOver;
             if (blueUnitCount <= 0 && redUnitCount <= 0)
             {
                 tieText.SetActive(true);
@@ -818,6 +818,7 @@ public class GameManager : MonoBehaviour
                 //Blue Wins
                 blueWinsText.SetActive(true);
             }
+            gameState = GameState.GameOver;
         }
     }
 }
