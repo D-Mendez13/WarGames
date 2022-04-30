@@ -266,22 +266,31 @@ public class GameManager : MonoBehaviour
                 if (unitList[AIUnitIndex].GetComponent<Unit>().unitActive)
                 {
                     SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
-                    PotentialTargets.Clear();
-                    EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
-                    SelectTarget();
-                    if (targetUnit != null)
-                    {
-                        FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
-                    }
-                    else
+                    //First check if there is a target unit within attacking range.
+                    AttackButton();
+                    if(targetUnit == null)
                     {
                         PotentialTargets.Clear();
-                        EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount + 4, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                        EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
                         SelectTarget();
                         if (targetUnit != null)
                         {
                             FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
                         }
+                        else
+                        {
+                            PotentialTargets.Clear();
+                            EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount + 4, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                            SelectTarget();
+                            if (targetUnit != null)
+                            {
+                                FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AI_InRange = true;
                     }
                     gameState = GameState.MovingUnit;
                     AIUnitIndex++;
@@ -298,7 +307,7 @@ public class GameManager : MonoBehaviour
             //If there is a move target, move unit. Else, wait.
             if(targetUnit != null)
             {
-                if(movePoint == selectedUnit.GetComponent<Transform>().position)
+                if (AI_InRange)
                 {
                     gameState = GameState.UnitAction;
                 }
