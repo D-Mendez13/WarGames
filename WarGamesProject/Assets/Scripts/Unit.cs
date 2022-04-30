@@ -91,6 +91,12 @@ public class Unit : MonoBehaviour
         if(health <= 0)
         {
             health = 0;
+            animator.SetTrigger("death");
+            UnitDeath();
+        }
+        else
+        {
+            animator.SetTrigger("hit");
         }
         healthBarUI.SetActive(true);
     }
@@ -103,5 +109,20 @@ public class Unit : MonoBehaviour
             health = unitType.maxHealth;
             healthBarUI.SetActive(false);
         }
+    }
+
+    public void DelayedInactive()
+    {
+        Invoke("UnitSetInactive", 1);
+    }
+
+    public void UnitDeath()
+    {
+        Invoke("Deactive", 1);
+    }
+
+    public void Deactive()
+    {
+        gameObject.SetActive(false);
     }
 }

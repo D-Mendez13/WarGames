@@ -10,6 +10,7 @@ public enum GameState
 {
     Menu,
     StartingTurn,
+    Waiting,
     SelectingUnit,
     MovingUnit,
     UnitWalking,
@@ -44,6 +45,8 @@ public class GameManager : MonoBehaviour
     public GameObject blueWinsText;
     public GameObject redWinsText;
     public GameObject tieText;
+    public GameObject blueTurnPanel;
+    public GameObject redTurnPanel;
 
     [Header("Tilemap Layers:")]
     public Tilemap tilemap; //The main tilemap with Grass tiles, Forest tiles, and Rock tiles
@@ -398,6 +401,7 @@ public class GameManager : MonoBehaviour
         if(currentTurn == Team.Blue)
         {
             currentTurn = Team.Red;
+            redTurnPanel.SetActive(true);
             foreach (GameObject unit in BlueUnitList)
             {
                 unit.GetComponent<Unit>().UnitSetActive();
@@ -407,6 +411,7 @@ public class GameManager : MonoBehaviour
         else
         {
             currentTurn = Team.Blue;
+            blueTurnPanel.SetActive(true);
             foreach (GameObject unit in RedUnitList)
             {
                 unit.GetComponent<Unit>().UnitSetActive();
@@ -414,8 +419,16 @@ public class GameManager : MonoBehaviour
             Debug.Log("Blue Turn");
         }
         IsUnitMoving();
-        gameState = GameState.StartingTurn;
+        gameState = GameState.Waiting;
         AIUnitIndex = 0;
+        Invoke("TurnPanelOff", 1);
+    }
+
+    void TurnPanelOff()
+    {
+        redTurnPanel.SetActive(false);
+        blueTurnPanel.SetActive(false);
+        gameState = GameState.StartingTurn;
     }
 
     public void SetSelectedUnit(GameObject unit, Vector3 startingPosition)
@@ -442,6 +455,7 @@ public class GameManager : MonoBehaviour
     {
         Unit attacker = selectedUnit.GetComponent<Unit>();
         Unit defender = targetUnit.GetComponent<Unit>();
+        attacker.animator.SetTrigger("attack");
         defender.TakeDamage(attacker.unitType.attack);
         if(defender.health <= 0)
         {
@@ -453,12 +467,12 @@ public class GameManager : MonoBehaviour
             {
                 redUnitCount--;
             }
-            targetUnit.SetActive(false);
         }
         else
         {
             if(defender.unitType.attackRange == attacker.unitType.attackRange)
             {
+                defender.animator.SetTrigger("attack");
                 attacker.TakeDamage(defender.unitType.attack / 2 );
                 if(attacker.health <= 0)
                 {
@@ -470,12 +484,10 @@ public class GameManager : MonoBehaviour
                     {
                         redUnitCount--;
                     }
-                    selectedUnit.SetActive(false);
                 }
             }
         }
-
-        selectedUnit.GetComponent<Unit>().UnitSetInactive();
+        selectedUnit.GetComponent<Unit>().DelayedInactive();
         gameState = GameState.SelectingUnit;
         targetUnit = null;
         dynamicTilemapBottomLayer.ClearAllTiles();
