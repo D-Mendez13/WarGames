@@ -72,6 +72,7 @@ public class Unit : MonoBehaviour
 
     public void UnitSetInactive()
     {
+        gameManager.AddToInactiveList(this);
         unitActive = false;
         animator.enabled=false;
         if (teamColor == Team.Blue)
@@ -91,6 +92,8 @@ public class Unit : MonoBehaviour
         if(health <= 0)
         {
             health = 0;
+            animator.ResetTrigger("hit");
+            animator.ResetTrigger("attack");
             animator.SetTrigger("death");
             UnitDeath();
         }
@@ -113,11 +116,22 @@ public class Unit : MonoBehaviour
 
     public void DelayedInactive()
     {
-        Invoke("UnitSetInactive", 1);
+        if(health > 0)
+        {
+            Invoke("UnitSetInactive", 1);
+        }
     }
 
     public void UnitDeath()
     {
+        if(teamColor == Team.Blue)
+        {
+            gameManager.DecreaseBlueUnitCount();
+        }
+        else
+        {
+            gameManager.DecreaseRedUnitCount();
+        }
         Invoke("Deactive", 1);
     }
 

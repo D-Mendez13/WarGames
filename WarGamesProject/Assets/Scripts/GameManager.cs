@@ -16,6 +16,8 @@ public enum GameState
     UnitWalking,
     UnitAction,
     SelectingTarget,
+    UnitAttacking,
+    EndingTurn,
     GameOver
 }
 
@@ -84,6 +86,7 @@ public class GameManager : MonoBehaviour
     private List<GameObject> PotentialTargets = new List<GameObject>(); //A list of enemy units in range for the AI.
     private List<GameObject> BlueUnitList = new List<GameObject>();
     private List<GameObject> RedUnitList = new List<GameObject>();
+    private List<Unit> inactiveUnits = new List<Unit>();
 
     void Start()
     {
@@ -164,6 +167,13 @@ public class GameManager : MonoBehaviour
             if (selectedUnitPosition.position == movePoint)
             {
                 EnableActionPanel();
+            }
+        }
+        if(gameState == GameState.UnitAttacking)
+        {
+            if(selectedUnit.GetComponent<Unit>().unitActive == false || selectedUnit.activeSelf == false)
+            {
+                gameState = GameState.SelectingUnit;
             }
         }
     }
@@ -253,26 +263,29 @@ public class GameManager : MonoBehaviour
                     }
                 }
 
-                SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
-                PotentialTargets.Clear();
-                EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
-                SelectTarget();
-                if(targetUnit != null)
+                if (unitList[AIUnitIndex].GetComponent<Unit>().unitActive)
                 {
-                    FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
-                }
-                else
-                {
+                    SetSelectedUnit(unitList[AIUnitIndex], unitList[AIUnitIndex].GetComponent<Transform>().position);
                     PotentialTargets.Clear();
-                    EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount + 4, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                    EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
                     SelectTarget();
-                    if(targetUnit != null)
+                    if (targetUnit != null)
                     {
                         FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
                     }
+                    else
+                    {
+                        PotentialTargets.Clear();
+                        EnemyRadar(selectedUnit.GetComponent<Unit>().unitType.moveAmount + 4, new Vector3Int((int)selectedUnitStartingPos.x, (int)selectedUnitStartingPos.y, (int)selectedUnitStartingPos.z));
+                        SelectTarget();
+                        if (targetUnit != null)
+                        {
+                            FindMoveableTiles(unitList[AIUnitIndex].GetComponent<Unit>().unitType, selectedUnitStartingPos);
+                        }
+                    }
+                    gameState = GameState.MovingUnit;
+                    AIUnitIndex++;
                 }
-                gameState = GameState.MovingUnit;
-                AIUnitIndex++;
             }
             else
             {
@@ -396,28 +409,25 @@ public class GameManager : MonoBehaviour
     public void EndTurnButton()
     {
         Debug.Log("End Button Clicked");
+        gameState = GameState.EndingTurn;
         endTurnButton.SetActive(false);
 
         if(currentTurn == Team.Blue)
         {
             currentTurn = Team.Red;
             redTurnPanel.SetActive(true);
-            foreach (GameObject unit in BlueUnitList)
-            {
-                unit.GetComponent<Unit>().UnitSetActive();
-            }
-            Debug.Log("Red Turn");
         }
         else
         {
             currentTurn = Team.Blue;
             blueTurnPanel.SetActive(true);
-            foreach (GameObject unit in RedUnitList)
-            {
-                unit.GetComponent<Unit>().UnitSetActive();
-            }
-            Debug.Log("Blue Turn");
         }
+
+        for (int i = 0; i < inactiveUnits.Count; i++)
+        {
+            inactiveUnits[i].UnitSetActive();
+        }
+        inactiveUnits.Clear();
         IsUnitMoving();
         gameState = GameState.Waiting;
         AIUnitIndex = 0;
@@ -453,42 +463,20 @@ public class GameManager : MonoBehaviour
 
     public void Combat()
     {
+        gameState = GameState.UnitAttacking;
         Unit attacker = selectedUnit.GetComponent<Unit>();
         Unit defender = targetUnit.GetComponent<Unit>();
+
         attacker.animator.SetTrigger("attack");
         defender.TakeDamage(attacker.unitType.attack);
-        if(defender.health <= 0)
+
+        if(defender.health > 0 && defender.unitType.attackRange == attacker.unitType.attackRange)
         {
-            if(targetUnit.GetComponent<Unit>().teamColor == Team.Blue)
-            {
-                blueUnitCount--;
-            }
-            else
-            {
-                redUnitCount--;
-            }
+            defender.animator.SetTrigger("attack");
+            attacker.TakeDamage(defender.unitType.attack / 2);
         }
-        else
-        {
-            if(defender.unitType.attackRange == attacker.unitType.attackRange)
-            {
-                defender.animator.SetTrigger("attack");
-                attacker.TakeDamage(defender.unitType.attack / 2 );
-                if(attacker.health <= 0)
-                {
-                    if (selectedUnit.GetComponent<Unit>().teamColor == Team.Blue)
-                    {
-                        blueUnitCount--;
-                    }
-                    else
-                    {
-                        redUnitCount--;
-                    }
-                }
-            }
-        }
+
         selectedUnit.GetComponent<Unit>().DelayedInactive();
-        gameState = GameState.SelectingUnit;
         targetUnit = null;
         dynamicTilemapBottomLayer.ClearAllTiles();
         dynamicTilemapTopLayer.ClearAllTiles();
@@ -809,10 +797,22 @@ public class GameManager : MonoBehaviour
     public void IncreaseBlueUnitCount()
     {
         blueUnitCount++;
+        Debug.Log($"There are {blueUnitCount} blue units total.");
     }
     public void IncreaseRedUnitCount()
     {
         redUnitCount++;
+        Debug.Log($"There are {redUnitCount} red units total.");
+    }
+    public void DecreaseBlueUnitCount()
+    {
+        blueUnitCount--;
+        Debug.Log($"There are {blueUnitCount} blue units total.");
+    }
+    public void DecreaseRedUnitCount()
+    {
+        redUnitCount--;
+        Debug.Log($"There are {redUnitCount} red units total.");
     }
     public void AddToUnitList(GameObject u)
     {
@@ -828,6 +828,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError($"Unit {u.name} does not have a team color.");
         }
+    }
+    public void AddToInactiveList(Unit unit)
+    {
+        inactiveUnits.Add(unit);
     }
     public void GameOverCheck()
     {
