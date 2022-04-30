@@ -591,6 +591,7 @@ public class GameManager : MonoBehaviour
 
     public void FindAttackableTiles(UnitType unit, Vector3 unitPosition)
     {
+        targetUnit = null;
         dynamicTilemapTopLayer.ClearAllTiles();
         dynamicTilemapBottomLayer.ClearAllTiles();
         Vector3Int startPos = new Vector3Int((int)unitPosition.x, (int)unitPosition.y, (int)unitPosition.z);
@@ -616,9 +617,18 @@ public class GameManager : MonoBehaviour
                     if(UnitOnTile(nextTilePosition) && UnitTeamColor(nextTilePosition) != selectedUnit.GetComponent<Unit>().teamColor)
                     {
                         dynamicTilemapBottomLayer.SetTile(nextTilePosition, dynamicTiles.attackTile);
-                        targetUnit = GetUnitOnTile(nextTilePosition);
+                        if(targetUnit != null)
+                        {
+                            if(targetUnit.GetComponent<Unit>().health > GetUnitOnTile(nextTilePosition).GetComponent<Unit>().health)
+                            {
+                                targetUnit = GetUnitOnTile(nextTilePosition);
+                            }
+                        }
+                        else
+                        {
+                            targetUnit = GetUnitOnTile(nextTilePosition);
+                        }
                         AI_InRange = true;
-                        //Potental Target
                     }
                     else
                     {
