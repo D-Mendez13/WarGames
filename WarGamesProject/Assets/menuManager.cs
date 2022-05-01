@@ -12,6 +12,9 @@ public class menuManager : MonoBehaviour
     public Canvas levelsA;
     public Canvas levelsB;
     public Canvas controls;
+    public Canvas gamemode;
+    public Canvas teamColor;
+    private GameManager AIControl= new GameManager();
     
     // Start is called before the first frame update
     void Start()
@@ -20,12 +23,14 @@ public class menuManager : MonoBehaviour
         levelsB.enabled = false;
         instructions.enabled = false;
         controls.enabled = false;
+        gamemode.enabled = false;
+        teamColor.enabled = false;
     }
 
     public void StartMenu()
     {
         title.enabled = false;
-        levelsA.enabled = true;
+        gamemode.enabled = true;
     }
 
     public void levelSelect(string level)
@@ -74,5 +79,36 @@ public class menuManager : MonoBehaviour
             title.enabled = true;
             controls.enabled = false;
         }
-    }   
+    }
+    
+    public void GameMode(string players)
+    {
+        if (players == "1")
+        {
+            teamColor.enabled = true;
+            gamemode.enabled = false;
+        }
+        else if (players == "2")
+        {
+            AIControl.setAI(players);
+            gamemode.enabled = false;
+            levelsA.enabled = true;
+        }
+    }
+
+    public void TeamColor(string team)
+    {
+        if (team == "0")
+        {
+            AIControl.setAI(team);
+            teamColor.enabled = false;
+            levelsA.enabled = true;
+        }
+        else if (team == "1")
+        {
+            AIControl.setAI(team);
+            teamColor.enabled = false;
+            levelsA.enabled = true;
+        }
+    }
 }

@@ -38,8 +38,8 @@ public class GameManager : MonoBehaviour
     public Color inactiveColor = new Color(0.3f, 0.3f, 0.3f, 1);
 
     [Header("AI:")]
-    public bool enableBlueAI = false;
-    public bool enableRedAI = true;
+    public static bool enableBlueAI = false;
+    public static bool enableRedAI = true;
 
     [Header("UI Objects:")]
     public GameObject actionPanel;
@@ -175,6 +175,25 @@ public class GameManager : MonoBehaviour
             {
                 gameState = GameState.SelectingUnit;
             }
+        }
+    }
+
+    public void setAI(string x)
+    {
+        if (x == "0")
+        {
+            enableRedAI = false;
+            enableBlueAI = true;
+        }
+        else if(x == "1")
+        {
+            enableRedAI = true;
+            enableBlueAI = false;
+        }
+        else if (x == "2")
+        {
+            enableRedAI = false;
+            enableBlueAI = false;
         }
     }
 
