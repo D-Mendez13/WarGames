@@ -61,6 +61,15 @@ public class Unit : MonoBehaviour
                 }
             }
         }
+        if (health >= unitType.maxHealth)
+        {
+            health = unitType.maxHealth;
+            healthBarUI.SetActive(false);
+        }
+        else
+        {
+            healthBarUI.SetActive(true);
+        }
     }
 
     public void UnitSetActive()
@@ -72,6 +81,7 @@ public class Unit : MonoBehaviour
 
     public void UnitSetInactive()
     {
+        gameManager.AddToInactiveList(this);
         unitActive = false;
         animator.enabled=false;
         if (teamColor == Team.Blue)
@@ -87,12 +97,24 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if(damage < 0)
+        {
+            damage = 0;
+        }
+
         health -= damage;
         if(health <= 0)
         {
             health = 0;
+            animator.ResetTrigger("hit");
+            animator.ResetTrigger("attack");
+            animator.SetTrigger("death");
+            UnitDeath();
         }
-        healthBarUI.SetActive(true);
+        else
+        {
+            animator.SetTrigger("hit");
+        }
     }
 
     public void Heal()
@@ -103,5 +125,31 @@ public class Unit : MonoBehaviour
             health = unitType.maxHealth;
             healthBarUI.SetActive(false);
         }
+    }
+
+    public void DelayedInactive()
+    {
+        if(health > 0)
+        {
+            Invoke("UnitSetInactive", 1);
+        }
+    }
+
+    public void UnitDeath()
+    {
+        if(teamColor == Team.Blue)
+        {
+            gameManager.DecreaseBlueUnitCount();
+        }
+        else
+        {
+            gameManager.DecreaseRedUnitCount();
+        }
+        Invoke("Deactive", 1);
+    }
+
+    public void Deactive()
+    {
+        gameObject.SetActive(false);
     }
 }
