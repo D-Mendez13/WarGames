@@ -14,7 +14,7 @@ public class menuManager : MonoBehaviour
     public Canvas controls;
     public Canvas gamemode;
     public Canvas teamColor;
-    private GameManager AIControl= new GameManager();
+    public GameManager AIControl;
     
     // Start is called before the first frame update
     void Start()

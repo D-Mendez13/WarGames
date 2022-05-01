@@ -3021,7 +3021,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -4108,7 +4108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -5679,16 +5679,17 @@ MonoBehaviour:
   m_text: 'Welcome to War Games,
 
 
-    To begin press the Start button on the main
-    menu then select 1 of 6 levels. In each map there will be 2 teams, the Red team
-    and the Blue team. Each team will select their given units and  send them to
-    a new position on the map to wait or attack, indicated by a blue square, If square
-    is grayed out then units cannot move to this position. The object of the game
-    is to knock out all of the enemy teams unity, when a unit is within range select
-    the option attack and select the enemy to deal damage. Each unit has their own
-    special traits, so choose their position wisely in order to gain the upperhand
-    against your opponent or to avoid environmental hazards that may deal damage
-    to you units. Once one side loses all of there units the game is over.'
+    The objective of the game is to knock out
+    all of the enemy teams units. To begin press the "Start" button on the main menu,
+    then select 1 of 6 levels. In each map there will be 2 teams, the Red team and
+    the Blue team. Each team will select their given units and send them to a new
+    position on the map to wait or attack, indicated by a blue square, If square
+    is grayed out then units cannot move to this position. When a unit is within
+    range select the option attack and select the enemy to deal damage. Each unit
+    has their own special traits, so choose their position wisely in order to gain
+    the upperhand against your opponent or to avoid environmental hazards that may
+    deal damage to you units. Once one side loses all of there units the game is
+    over.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -6714,6 +6715,7 @@ MonoBehaviour:
   controls: {fileID: 236856282}
   gamemode: {fileID: 472876676}
   teamColor: {fileID: 1390843131}
+  AIControl: {fileID: 7665176399373652926, guid: 61133c9a271c6494caad9e2b0505d62a, type: 3}
 --- !u!4 &1175693786
 Transform:
   m_ObjectHideFlags: 0
@@ -7100,7 +7102,7 @@ GameObject:
   - component: {fileID: 1330080863}
   - component: {fileID: 1330080862}
   m_Layer: 5
-  m_Name: Instrunction
+  m_Name: Instructions
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7135,7 +7137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -7371,7 +7373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -8022,7 +8024,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Instrunctions
+  m_text: Instructions
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8751,8 +8753,8 @@ MonoBehaviour:
     Right-Click on mouse to choose to end
     turn. You may also undo players movement if units position has not been confirmed.'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
