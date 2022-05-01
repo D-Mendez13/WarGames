@@ -61,6 +61,15 @@ public class Unit : MonoBehaviour
                 }
             }
         }
+        if (health >= unitType.maxHealth)
+        {
+            health = unitType.maxHealth;
+            healthBarUI.SetActive(false);
+        }
+        else
+        {
+            healthBarUI.SetActive(true);
+        }
     }
 
     public void UnitSetActive()
@@ -88,6 +97,11 @@ public class Unit : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if(damage < 0)
+        {
+            damage = 0;
+        }
+
         health -= damage;
         if(health <= 0)
         {
@@ -101,7 +115,6 @@ public class Unit : MonoBehaviour
         {
             animator.SetTrigger("hit");
         }
-        healthBarUI.SetActive(true);
     }
 
     public void Heal()

@@ -468,12 +468,12 @@ public class GameManager : MonoBehaviour
         Unit defender = targetUnit.GetComponent<Unit>();
 
         attacker.animator.SetTrigger("attack");
-        defender.TakeDamage(attacker.unitType.attack);
+        defender.TakeDamage(attacker.unitType.attack - defender.unitType.defense);
 
         if(defender.health > 0 && defender.unitType.attackRange == attacker.unitType.attackRange)
         {
             defender.animator.SetTrigger("attack");
-            attacker.TakeDamage(defender.unitType.attack / 2);
+            attacker.TakeDamage((defender.unitType.attack / 2) - attacker.unitType.defense);
         }
 
         selectedUnit.GetComponent<Unit>().DelayedInactive();
