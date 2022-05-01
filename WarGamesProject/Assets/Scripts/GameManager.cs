@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     [Header("UI Objects:")]
     public GameObject actionPanel;
     public GameObject endTurnButton;
+    public GameObject exitButton;
     public GameObject blueWinsText;
     public GameObject redWinsText;
     public GameObject tieText;
@@ -230,12 +231,14 @@ public class GameManager : MonoBehaviour
             {
                 case GameState.Menu:
                     endTurnButton.SetActive(false);
+                    exitButton.SetActive(false);
                     gameState = GameState.SelectingUnit;
                     break;
                 case GameState.StartingTurn:
                     break;
                 case GameState.SelectingUnit:
                     endTurnButton.SetActive(true);
+                    exitButton.SetActive(true);
                     gameState = GameState.Menu;
                     break;
                 case GameState.MovingUnit:
@@ -430,6 +433,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("End Button Clicked");
         gameState = GameState.EndingTurn;
         endTurnButton.SetActive(false);
+        exitButton.SetActive(false);
 
         if(currentTurn == Team.Blue)
         {
@@ -451,6 +455,11 @@ public class GameManager : MonoBehaviour
         gameState = GameState.Waiting;
         AIUnitIndex = 0;
         Invoke("TurnPanelOff", 1);
+    }
+
+    public void ExitButton()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 
     void TurnPanelOff()
