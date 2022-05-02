@@ -3829,7 +3829,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -114}
+  m_AnchoredPosition: {x: 0, y: -147}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &427425166
@@ -5685,11 +5685,11 @@ MonoBehaviour:
     the Blue team. Each team will select their given units and send them to a new
     position on the map to wait or attack, indicated by a blue square, If square
     is grayed out then units cannot move to this position. When a unit is within
-    range select the option attack and select the enemy to deal damage. Each unit
-    has their own special traits, so choose their position wisely in order to gain
-    the upperhand against your opponent or to avoid environmental hazards that may
-    deal damage to you units. Once one side loses all of there units the game is
-    over.'
+    range, indicated by a red square, they can select the option attack and select
+    the enemy to deal damage. Each unit has their own special traits, so choose their
+    position wisely in order to gain the upperhand against your opponent or to avoid
+    environmental hazards that may deal damage to you units. Once one side loses
+    all of their units the game is over.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -8751,7 +8751,9 @@ MonoBehaviour:
     and select option to wait or attack.
 
     Right-Click on mouse to choose to end
-    turn. You may also undo players movement if units position has not been confirmed.'
+    turn. You may also undo players movement if units position has not been confirmed.
+    You may also end the game by click right click and then the end game button on
+    the bottom of the screen.'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -8778,8 +8780,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 28
+  m_fontSizeBase: 28
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
